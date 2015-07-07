@@ -1,0 +1,87 @@
+<script>
+  // Devuelve las unidades organizativas del dominio y las pasa a la funcion que las muestra
+  function cargarCombo(){
+    document.getElementById("imagenCarga").style.display= "inline"; // Imagen de carga
+    google.script.run.withSuccessHandler(cargarUO).cargarUO();
+  }
+  
+  // Vacia el combo de opciones
+  function vaciarCombo(){
+    var combo= document.getElementById("cmb");
+    while (combo.options.length > 0){
+      combo.remove(0);
+    }
+  }
+  
+  // Abre un alert con el estilo propio de Google a partir de un titulo y un mensaje a mostrar
+  function customAlert(title, msg){
+    google.script.run.withSuccessHandler().confirmation(title, msg);
+  }
+
+  // Rellena el combo con las unidades organizativas que recibe por parametros
+  function cargarUO(orgUnits){
+    document.getElementById("imagenCarga").style.display= "none"; // Oculta la imagen de carga
+    
+    if (orgUnits == null){ // Si las unidades organizativas estan a nulo muestra un mensaje de error
+      customAlert("Ha surgido un problema...", "Error al recoger las unidades organizativas!");
+      
+    }else{ // En caso contrario rellena el combo con las que hubiera
+      var combo= document.getElementById("cmb");
+      
+      vaciarCombo(); // Vacia el combo, por si se ha vuelto a pulsar el boton
+      
+      for (var i=0; i<orgUnits.length; i++){
+        var option = document.createElement("option");
+        option.text = orgUnits[i].orgUnitPath;
+        option.value = orgUnits[i].orgUnitId;
+      
+        if (i%2 != 0){ // Por cada dos filas, una de ellas tendrá un fondo grisaceo
+          option.style.backgroundColor= "#EDEDED";
+        }
+        combo.add(option);
+      }
+      
+      document.getElementById("botonEnviar").disabled = false; // Habilita el boton para seleccionar la U.O.
+      document.getElementById("botonEnviar").style.backgroundColor= "#FFFFFF"; // Y le da estilo
+    }
+  }
+  
+  // Confirma la seleccion de la unidad organizativa
+  function enviar(){
+    var combo= document.getElementById("cmb");
+    var valorAPasar= combo.options[combo.selectedIndex].text;
+    google.script.run.withSuccessHandler(close).UOSelected(valorAPasar); // Cambia el valor de todos los registros
+  }
+  
+  // Cierra el cuadro de dialogo de seleccion de unidad organizativa
+  function close(){
+    google.script.host.close();
+  }
+</script>
+
+<style>
+  #contenido { color: #2E2E2E; }
+  p { text-align: justify; font-family: Arial, Helvetica, sans-serif; line-height: 140%; }
+  form { text-align: center; }
+  select { padding: 5px; background-color: #FFFFFF; color: #151515; }
+  input { padding: 7px 5px; background-color: #FFFFFF; color: #151515; }
+</style>
+
+<div id="contenido">
+  <p>
+    Para seleccionar una <b>Unidad Organizativa</b>, primero deberás cargar el menú desplegable pulsando en el botón "<b>Cargar Un. Org.</b>".
+    Espera a que cargue el desplegable para poder seleccionar una. Cuando hayas decidido donde quieres insertar a los 
+    usuarios de esta hoja, pulsa el botón "<b>Seleccionar</b>" y espera a que se modifique el campo correspondiente para 
+    cada usuario. Cuando hayan sido modificadas todas las celdas el cuadro de diálogo se cerrará.
+  </p>
+  
+  <form name="form">
+    <div id="cargaDeUO">
+        <select id="cmb"> </select>
+        <input type="button" value="Cargar Un. Org." onclick="cargarCombo()">
+        <img id="imagenCarga" src="http://imageshack.com/a/img673/7938/YiPbuD.gif" style="width: 2.5%; display: none;" />
+    </div>
+    
+    <br><br><input id="botonEnviar" style="background-color: #CDCDCD;" type="button" value="Seleccionar" onclick="enviar()" disabled />
+  </form>
+</div>
