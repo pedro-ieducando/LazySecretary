@@ -5,4 +5,4 @@ LazySecretary es un complemento para las hojas de cálculo de Google que va a pe
 - Decidir la unidad organizativa donde se van a añadir, a partir de la elección del Administrador.
 - Envíar un correo electrónico con las credenciales de la nueva cuenta a una dirección de contacto.
 
-Está escrito en el lenguaje de programación <a href="https://developers.google.com/apps-script/">Google Apps Script</a>
+Está escrito en el lenguaje de programación <a href="https://developers.google.com/apps-script/" target="_blank">Google Apps Script</a>
