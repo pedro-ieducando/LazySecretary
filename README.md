@@ -9,4 +9,4 @@ Está escrito en el lenguaje de programación <a href="https://developers.google
 
 Accede a la <a href="https://github.com/pedro-ieducando/LazySecretary/wiki">wiki</a> para saber como instalarlo para probarlo y continuar el desarrollo.
 
-Cualquier referencia a este complemento deberá inclir referencia a los autores: <a href="http://ieducando.com" target="_blank">ieducando</a> y <a href="https://plus.google.com/u/0/b/108412825091483733423/communities/106561953391669938292" target="_blank">GDG Madrid</a>
+Cualquier referencia a este complemento deberá incluir obligatoriamente referencia a los autores: <a href="http://ieducando.com" target="_blank">ieducando</a> y <a href="https://plus.google.com/u/0/b/108412825091483733423/communities/106561953391669938292" target="_blank">GDG Madrid</a>
