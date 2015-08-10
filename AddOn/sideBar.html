@@ -1,0 +1,219 @@
+<html>
+<head>
+  <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+
+  <script>
+    // Valores de las cadenas de texto
+    _0= "Paso 1: rellena la hoja";
+    _1= "Para empezar, debes cumplimentar la hoja de cálculo de la siguiente manera (vamos a tomar como ejemplo al usuario judith.smith@example.com):";
+    _2= "Nombre de usuario: judith.smith";
+    _3= "Contraseña: la que quieras (procura que sea segura)";
+    _4= "Nombre: Judith";
+    _5= "Apellidos: Smith";
+    _6= "Dominio: example.com";
+    _7= "Unidad Organizativa (ruta): no rellenes este campo aun, podrás hacerlo más adelante.";
+    _8= "Correo de contacto: el que quieras";
+    _9= "Los otros campos no son obligatorios ni van a ser usados. Solo estáń ahí por si decides guardar más información de los usuarios que quieres crear. Ve al paso 2 cuando hayas terminado.";
+    _10= "Paso 2: elige Unidad Organizativa";
+    _11= "Ahora es el momento de selecccionar una U.O. (obligatorio haber completado el primer paso). Pulsa el botón 'Seleccionar' y se abrirá un cuadro de diálogo. Sigue las instrucciones y todo irá bien. Cuando hayas terminado, ve al paso 3.";
+    _12= "Paso 3: configuracion";
+    _13= "Configura las diferentes opciones que se te ofrecen para crear los usuarios. Puedes decidir si enviar correos electrónicos de bienvenida y, dependiendo de la cuota de envio diario que te quede, en que momento terminar la ejecución:";
+    _14= "Enviar correo de bienvenida:";
+    _15= "Parar ejecución si tu cuota es inferior a (si lo dejas en blanco, seguirá creando usuarios pero sin enviarles el correo):";
+    _16= "Paso 4: crea los usuarios";
+    _17= "Ahora si, vamos a crear los usuarios. Pulsa el botón 'Crear' para introducir los usuarios en tu dominio. Si decides enviar correos electrónicos de bienvenida, asegúrate de haber cumplimentado el camoo 'Correo de contacto'";
+    btnSelectUO= "Seleccionar";
+    btnCreateUsers= "Crear";
+    lblRadioMailYes= "Si";
+    lblRadioMailNo= "No";
+    lblTextCantidad= "Cuota diaria";
+      
+    window.onload = function() {
+      init();
+    };
+    
+    function init(){
+      var leng= window.navigator.language;
+      
+      if (leng != "es"){
+        google.script.run.withSuccessHandler(t0).translate(_0, leng);
+        google.script.run.withSuccessHandler(t1).translate(_1, leng);
+        google.script.run.withSuccessHandler(t2).translate(_2, leng);
+        google.script.run.withSuccessHandler(t3).translate(_3, leng);
+        google.script.run.withSuccessHandler(t4).translate(_4, leng);
+        google.script.run.withSuccessHandler(t5).translate(_5, leng);
+        google.script.run.withSuccessHandler(t6).translate(_6, leng);
+        google.script.run.withSuccessHandler(t7).translate(_7, leng);
+        google.script.run.withSuccessHandler(t8).translate(_8, leng);
+        google.script.run.withSuccessHandler(t9).translate(_9, leng);
+        google.script.run.withSuccessHandler(t10).translate(_10, leng);
+        google.script.run.withSuccessHandler(t11).translate(_11, leng);
+        google.script.run.withSuccessHandler(t12).translate(_12, leng);
+        google.script.run.withSuccessHandler(t13).translate(_13, leng);
+        google.script.run.withSuccessHandler(t14).translate(_14, leng);
+        google.script.run.withSuccessHandler(t15).translate(_15, leng);
+        google.script.run.withSuccessHandler(t16).translate(_16, leng);
+        google.script.run.withSuccessHandler(t17).translate(_17, leng);
+        
+        google.script.run.withSuccessHandler(tBtnSelectUO).translate(btnSelectUO, leng);
+        google.script.run.withSuccessHandler(tBtnCreateUsers).translate(btnCreateUsers, leng);
+        google.script.run.withSuccessHandler(tLblRadioMailYes).translate(lblRadioMailYes, leng);
+        google.script.run.withSuccessHandler(tLblRadioMailNo).translate(lblRadioMailNo, leng);
+        google.script.run.withSuccessHandler(tLblTextCantidad).translate(lblTextCantidad, leng);
+      }else{
+        continueInit();
+      }
+    }
+    
+    function t0(texto){ _0= texto; }
+    function t1(texto){ _1= texto; }
+    function t2(texto){ _2= texto; }
+    function t3(texto){ _3= texto; }
+    function t4(texto){ _4= texto; }
+    function t5(texto){ _5= texto; }
+    function t6(texto){ _6= texto; }
+    function t7(texto){ _7= texto; }
+    function t8(texto){ _8= texto; }
+    function t9(texto){ _9= texto; }
+    function t10(texto){ _10= texto; }
+    function t11(texto){ _11= texto; }
+    function t12(texto){ _12= texto; }
+    function t13(texto){ _13= texto; }
+    function t14(texto){ _14= texto; }
+    function t15(texto){ _15= texto; }
+    function t16(texto){ _16= texto; }
+    function t17(texto){ _17= texto; }
+    function tBtnSelectUO(texto){ btnSelectUO= texto; }
+    function tBtnCreateUsers(texto){ btnCreateUsers= texto; }
+    function tLblRadioMailYes(texto){ lblRadioMailYes= texto; }
+    function tLblRadioMailNo(texto){ lblRadioMailNo= texto; }
+    function tLblTextCantidad(texto){ lblTextCantidad= texto; continueInit(); }
+    
+    function continueInit(){
+      document.getElementById("0").innerHTML= _0;
+      document.getElementById("1").innerHTML= _1;
+      document.getElementById("2").innerHTML= _2;
+      document.getElementById("3").innerHTML= _3;
+      document.getElementById("4").innerHTML= _4;
+      document.getElementById("5").innerHTML= _5;
+      document.getElementById("6").innerHTML= _6;
+      document.getElementById("7").innerHTML= _7;
+      document.getElementById("8").innerHTML= _8;
+      document.getElementById("9").innerHTML= _9;
+      document.getElementById("10").innerHTML= _10;
+      document.getElementById("11").innerHTML= _11;
+      document.getElementById("12").innerHTML= _12;
+      document.getElementById("13").innerHTML= _13;
+      document.getElementById("14").innerHTML= _14;
+      document.getElementById("15").innerHTML= _15;
+      document.getElementById("16").innerHTML= _16;
+      document.getElementById("17").innerHTML= _17;
+      document.getElementById("btnSelectUO").innerHTML= btnSelectUO;
+      document.getElementById("btnCreateUsers").innerHTML= btnCreateUsers;
+      document.getElementById("lblRadioMailYes").innerHTML= lblRadioMailYes;
+      document.getElementById("lblRadioMailNo").innerHTML= lblRadioMailNo;
+      document.getElementById("lblTextCantidad").innerHTML= lblTextCantidad;
+    
+      document.getElementById("contenido").style.display= "block";
+      document.getElementById("cargaPagina").style.display= "none";
+    }
+    
+    function seleccionarUO(){
+      google.script.run.chooseUO();
+    }
+    
+    function mailListener(){
+      var seleccionado= document.getElementById("radioMailYes").checked;
+      if (seleccionado == false){
+        document.getElementById("txtCantidad").disabled = true;
+      }else{
+        document.getElementById("txtCantidad").disabled = false;
+      }
+    }
+    
+    // Empezamos a crear los usuarios
+    function crearUsuarios(){
+      document.getElementById("waitCreateUsers").style.display= "inline"; // Dibujamos la imagen de carga
+      
+      var permitirEmail= document.getElementById("radioMailYes").checked; // Comprobamos si permitimos el envio de correos
+      
+      if (permitirEmail){
+        var cuotaMinima= document.getElementById("txtCantidad").value; // Comprobamos la cantidad minima que el usuario quiere que le quede
+        if (cuotaMinima==""){
+          cuotaMinima= -1; // Si no establece una cantidad, entonces no le quedará ninguno en caso de ser demasiados
+        }
+        
+        google.script.run.withSuccessHandler(usuariosCreados).createUsers(permitirEmail, cuotaMinima);
+        
+      }else{
+        google.script.run.withSuccessHandler(usuariosCreados).createUsers(permitirEmail, -1);
+      }
+    }
+    
+    // Devolvemos la cantidad de usuarios creados
+    function usuariosCreados(cantidad){
+      google.script.run.withSuccessHandler().confirmation("Trabajo finalizado", "Ha terminado la ejecución del programa. Se crearon "+cantidad+" usuarios.");
+      document.getElementById("waitCreateUsers").style.display= "none";
+    }
+    
+  </script>
+
+  <style>
+    #contenido { display: none; padding-left: 8px; padding-right: 8px; padding-bottom: 10px; text-align: justify;}
+    #cargaPagina { top: 50%; left:45%; position: absolute; }
+    #waitCreateUsers {position:absolute; float:right; margin-top:6px; margin-left:10px; width: 15px; display:none; }
+    #formEmail {width: 45%; padding-right: 2.5%; padding-left: 2.5%; text-align: left; float: left;}
+    #formCuota {width: 45%; padding-right: 2.5%; padding-left: 2.5%; padding-bottom: 25px; text-align: left; float: left;}
+  </style>
+</head>
+
+<body>
+  <div id="cargaPagina">
+    <img src="http://i.imgur.com/jB43NZD.gif" />
+  </div>
+  
+  <div id="contenido">
+      <h3 id="0"></h3>
+      <p id="1"></p>
+      <ul>
+        <li id="2"></li>
+        <li id="3"></li>
+        <li id="4"></li>
+        <li id="5"></li>
+        <li id="6"></li>
+        <li id="7"></li>
+        <li id="8"></li>
+      </ul>
+      <p id="9"></p>
+      
+      <h3 id="10"></h3>
+      <p id="11"><p>
+      <button class="action" id="btnSelectUO" onclick="seleccionarUO()"></button>
+      
+      <h3 id="12"></h3>
+      <p style="margin-bottom: -7px;" id="13"></p>
+      
+      <div id="formEmail">
+        <p id="14"></p>
+        <input type="radio" name="radioMail" id="radioMailYes" onclick="mailListener()" checked />
+        <label id="lblRadioMailYes" ></label>
+        <br>
+        <input type="radio" name="radioMail" id="radioMailNo" onclick="mailListener()" />
+        <label id="lblRadioMailNo" ></label> 
+      </div>
+      
+      <div class="inline form-group" id="formCuota">
+        <p id="15"></p>
+        <label for="txtCantidad" id="lblTextCantidad"></label>
+        <input type="number" min="0" id="txtCantidad" style="width: 65px;" />
+      </div>
+      
+      <h3 id="16" style="clear:both;"></h3>
+      <p id="17"></p>
+      <button class="create" id="btnCreateUsers" onclick="crearUsuarios()"></button>
+      <img id="waitCreateUsers" src="http://i.imgur.com/jB43NZD.gif" />
+  </div>
+  
+</body>
+
+</html>
