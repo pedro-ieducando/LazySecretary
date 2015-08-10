@@ -1,6 +1,50 @@
+<html>
+<head>
+  <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+
 <script>
+  // Valores de las cadenas de texto
+  parrafoInstrucciones= 
+    "Selecciona una Unidad Organizativa de la lista. Si no existe, puedes crearla en la consola de administración de tu dominio y pulsar en 'Actualizar' para recargar la lista. Para poder seleccionar una Unidad organizativa, la hoja debe estar rellena con al menos un usuario.";
+  loadButton= "Actualizar";
+  submitButton= "Seleccionar";
+      
+  window.onload = function() {
+    init();
+  };
+  
+  function init(){
+    var leng= window.navigator.language;
+    if (leng != "es"){
+      google.script.run.withSuccessHandler(translateParrafoInstrucciones).translate(parrafoInstrucciones, leng);
+      google.script.run.withSuccessHandler(translateLoadButton).translate(loadButton, leng);
+      google.script.run.withSuccessHandler(translateSubmitButton).translate(submitButton, leng);
+    }else{
+      continueInit();
+    }
+  }
+  
+  function continueInit(){
+    document.getElementById("parrafoInstrucciones").innerHTML= parrafoInstrucciones;
+    document.getElementById("loadButton").value= loadButton;
+    document.getElementById("submitButton").value= submitButton;
+    document.getElementById("contenido").style.display= "inline";
+    cargarCombo();
+  }
+  
+  function translateParrafoInstrucciones(texto){
+    parrafoInstrucciones= texto; }
+  function translateLoadButton(texto){
+    loadButton= texto; }
+  function translateSubmitButton(texto){
+    submitButton= texto;
+    continueInit();
+  }
+  
+
   // Devuelve las unidades organizativas del dominio y las pasa a la funcion que las muestra
   function cargarCombo(){
+    document.getElementById("msgError").innerHTML= "";
     document.getElementById("imagenCarga").style.display= "inline"; // Imagen de carga
     google.script.run.withSuccessHandler(cargarUO).cargarUO();
   }
@@ -23,8 +67,8 @@
     document.getElementById("imagenCarga").style.display= "none"; // Oculta la imagen de carga
     
     if (orgUnits == null){ // Si las unidades organizativas estan a nulo muestra un mensaje de error
-      customAlert("Ha surgido un problema...", "Error al recoger las unidades organizativas!");
-      
+      var error= "Ha ocurrido un error al cargar las unidades organizativas, intentalo de nuevo más tarde."
+      document.getElementById("msgError").innerHTML= error;
     }else{ // En caso contrario rellena el combo con las que hubiera
       var combo= document.getElementById("cmb");
       
@@ -34,15 +78,11 @@
         var option = document.createElement("option");
         option.text = orgUnits[i].orgUnitPath;
         option.value = orgUnits[i].orgUnitId;
-      
-        if (i%2 != 0){ // Por cada dos filas, una de ellas tendrá un fondo grisaceo
-          option.style.backgroundColor= "#EDEDED";
-        }
         combo.add(option);
       }
       
-      document.getElementById("botonEnviar").disabled = false; // Habilita el boton para seleccionar la U.O.
-      document.getElementById("botonEnviar").style.backgroundColor= "#FFFFFF"; // Y le da estilo
+      document.getElementById("submitButton").disabled = false; // Habilita el boton para seleccionar la U.O.
+      document.getElementById("submitButton").style.backgroundColor= "#FFFFFF"; // Y le da estilo
     }
   }
   
@@ -60,28 +100,32 @@
 </script>
 
 <style>
-  #contenido { color: #2E2E2E; }
-  p { text-align: justify; font-family: Arial, Helvetica, sans-serif; line-height: 140%; }
-  form { text-align: center; }
-  select { padding: 5px; background-color: #FFFFFF; color: #151515; }
-  input { padding: 7px 5px; background-color: #FFFFFF; color: #151515; }
+  p { text-align: justify; margin-bottom: 50px;}
+  form { }
+  #imagenCarga {position:absolute; float:right; margin-top:6px; margin-left:10px; width: 15px; display:none; }
+  #msgError { position: absolute; float: left; margin-top: -35px; }
 </style>
+</head>
 
+<body>
 <div id="contenido">
-  <p>
-    Para seleccionar una <b>Unidad Organizativa</b>, primero deberás cargar el menú desplegable pulsando en el botón "<b>Cargar Un. Org.</b>".
-    Espera a que cargue el desplegable para poder seleccionar una. Cuando hayas decidido donde quieres insertar a los 
-    usuarios de esta hoja, pulsa el botón "<b>Seleccionar</b>" y espera a que se modifique el campo correspondiente para 
-    cada usuario. Cuando hayan sido modificadas todas las celdas el cuadro de diálogo se cerrará.
-  </p>
+  <p id="parrafoInstrucciones"></p>
+  
+  <div id="msgError" class="error"></div>
   
   <form name="form">
     <div id="cargaDeUO">
         <select id="cmb"> </select>
-        <input type="button" value="Cargar Un. Org." onclick="cargarCombo()">
-        <img id="imagenCarga" src="http://imageshack.com/a/img673/7938/YiPbuD.gif" style="width: 2.5%; display: none;" />
+        <img id="imagenCarga" src="http://i.imgur.com/jB43NZD.gif" />
     </div>
     
-    <br><br><input id="botonEnviar" style="background-color: #CDCDCD;" type="button" value="Seleccionar" onclick="enviar()" disabled />
+    <br>
+    
+    <input class="action" id="submitButton" style="background-color: #CDCDCD;" type="button" value="" onclick="enviar()" disabled />
+    <input id="loadButton" type="button" value="" onclick="cargarCombo()">
+    
   </form>
 </div>
+</body>
+
+</html>
