@@ -18,10 +18,10 @@
     _11= "Ahora es el momento de selecccionar una U.O. (obligatorio haber completado el primer paso). Pulsa el botón 'Seleccionar' y se abrirá un cuadro de diálogo. Sigue las instrucciones y todo irá bien. Cuando hayas terminado, ve al paso 3.";
     _12= "Paso 3: configuracion";
     _13= "Configura las diferentes opciones que se te ofrecen para crear los usuarios. Puedes decidir si enviar correos electrónicos de bienvenida y, dependiendo de la cuota de envio diario que te quede, en que momento terminar la ejecución:";
-    _14= "Enviar correo de bienvenida:";
-    _15= "Parar ejecución si tu cuota es inferior a (si lo dejas en blanco, seguirá creando usuarios pero sin enviarles el correo):";
+    _14= "Enviar correo de bienvenida: con esta opción podrás decidir si enviar un correo de bienvenida a los nuevos usuarios. Asegurate de escribir bien el correo electrónico en el campo 'Correo de contacto'.";
+    _15= "Si decides enviar mensajes de bienvenida, puedes parar la ejecución cuando te quede poca o ninguna cuota de envío, en caso de que quieras enviar un correo de forma obligatoria para que los usuarios conozcan sus credenciales. Si dejas este cuadro en blanco, se enviarán mensajes hasta agotar la cuota y se seguirán creando usuarios incluso después de haberla agotado. Si indicas un número de cuota, antes de crear el usuario, se validará el campo Correo de contacto y se comprobará que tu cuota no sea inferior al número que has definido:";
     _16= "Paso 4: crea los usuarios";
-    _17= "Ahora si, vamos a crear los usuarios. Pulsa el botón 'Crear' para introducir los usuarios en tu dominio. Si decides enviar correos electrónicos de bienvenida, asegúrate de haber cumplimentado el camoo 'Correo de contacto'";
+    _17= "Ahora si, vamos a crear los usuarios. Pulsa el botón 'Crear' para introducir los usuarios en tu dominio. Si has decidido enviar correos electrónicos de bienvenida, asegúrate de haber cumplimentado el campo 'Correo de contacto'";
     btnSelectUO= "Seleccionar";
     btnCreateUsers= "Crear";
     lblRadioMailYes= "Si";
@@ -126,6 +126,7 @@
       var seleccionado= document.getElementById("radioMailYes").checked;
       if (seleccionado == false){
         document.getElementById("txtCantidad").disabled = true;
+        document.getElementById("txtCantidad").value = "";
       }else{
         document.getElementById("txtCantidad").disabled = false;
       }
@@ -146,7 +147,7 @@
         google.script.run.withSuccessHandler(usuariosCreados).createUsers(permitirEmail, cuotaMinima);
         
       }else{
-        google.script.run.withSuccessHandler(usuariosCreados).createUsers(permitirEmail, -1);
+        google.script.run.withSuccessHandler(usuariosCreados).createUsers(permitirEmail, -1); // Si no permite el envio de emails se crearan los usuarios sin enviarles el correo de bienvenida
       }
     }
     
@@ -162,8 +163,8 @@
     #contenido { display: none; padding-left: 8px; padding-right: 8px; padding-bottom: 10px; text-align: justify;}
     #cargaPagina { top: 50%; left:45%; position: absolute; }
     #waitCreateUsers {position:absolute; float:right; margin-top:6px; margin-left:10px; width: 15px; display:none; }
-    #formEmail {width: 45%; padding-right: 2.5%; padding-left: 2.5%; text-align: left; float: left;}
-    #formCuota {width: 45%; padding-right: 2.5%; padding-left: 2.5%; padding-bottom: 25px; text-align: left; float: left;}
+    #lblRadioMailYes {margin-right: 20px;}
+    h3 {margin-bottom: -12px; margin-top: 20px;}
   </style>
 </head>
 
@@ -195,11 +196,13 @@
       
       <div id="formEmail">
         <p id="14"></p>
-        <input type="radio" name="radioMail" id="radioMailYes" onclick="mailListener()" checked />
-        <label id="lblRadioMailYes" ></label>
-        <br>
-        <input type="radio" name="radioMail" id="radioMailNo" onclick="mailListener()" />
-        <label id="lblRadioMailNo" ></label> 
+        <span>
+          <input type="radio" name="radioMail" id="radioMailYes" onclick="mailListener()" checked />
+          <label id="lblRadioMailYes" ></label>
+        
+          <input type="radio" name="radioMail" id="radioMailNo" onclick="mailListener()" />
+          <label id="lblRadioMailNo" ></label>
+        </span>
       </div>
       
       <div class="inline form-group" id="formCuota">
