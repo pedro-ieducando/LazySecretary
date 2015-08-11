@@ -98,7 +98,7 @@ function initialize(){
     nuevaHoja.getRange('J1').setValue("  "+valores[9]+"  ");
     nuevaHoja.getRange('K1').setValue("  "+valores[10]+"  ");
     nuevaHoja.getRange('L1').setValue("  "+valores[11]+"  ");
-    nuevaHoja.getRange('M1').setBackground("#CEE3F6").setValue("  "+valores[12]+" *  ");
+    nuevaHoja.getRange('M1').setBackground("#CEE3F6").setValue("  "+valores[12]+"  ");
     nuevaHoja.getRange('N1').setValue("  "+valores[13]+"  ");
     
     for (var i=1; i<=14; i++){
@@ -143,7 +143,6 @@ function getStarted(){
 
 // Crea usuarios en el dominio a partir de los datos de la hoja
 function createUsers(permitirEmail, cuotaMinima){
-  //enviar mail es la opcion que te permite decidir si quieres enviar correos electronicos a los nuevos usuarios que se vayan a crear
   
   // Comprueba que tiene una cuenta de Google Apps
   var typeAccount= checkAccount();
@@ -157,12 +156,13 @@ function createUsers(permitirEmail, cuotaMinima){
   // Valores de las cadenas de texto
   var valores= [
     "Los campos con '*' no pueden estar vacíos",
-    "Introduce un correo electrónico válido para enviar el correo de bienvenida",
-    "No se creará el usuario por no poder enviar el correo de bienvenida. Se ha llegado al mínimo establecido.",
-    "Has decidido no enviar más correos electrónicos. ¿Quieres crear los usuarios de todas formas? (no se les enviará correo de bienvenida)",
-    "Se ha acabado tu cuota diaria de envío de correo electrónico. ¿Quieres crear los usuarios de todas formas? (no se les enviará correo de bienvenida)",
-    "Usuario no creado por decisión del Administrador",
-    "Usuario creado"
+    "Usuario no creado: introduce un correo electrónico válido para enviar el correo de bienvenida",
+    "Usuario no creado: se ha agotado la cuota diaria de envío de correos electrónicos",
+    "Usuario no creado: se ha alcanzado la cuota mínima diaria de envío de correos definida por el usuario",
+    "Usuario creado, correo electrónico enviado",
+    "Usuario creado, pero la cuota de envío de correo electronico se ha agotado",
+    "Usuario creado, pero el correo electrónico del campo 'Correo de contacto' no es válido",
+    "Usuario creado. Configurado sin envío de correo de bienvenida"
   ];
   
   if (lang != "es"){
@@ -191,30 +191,30 @@ function createUsers(permitirEmail, cuotaMinima){
       continue;
     };
     
-    // Comprueba la cuota diaria restante
-    var cuota= checkDailyQuota();
     
-    if (permitirEmail && cuotaMinima != -1){ 
-      if (!checkEmail(data[i])){
-        celdaExito.setValue(valores[1]); // Si el correo no es valido pasa al siguiente
+    var cuota= checkDailyQuota(); // Comprueba la cuota diaria restante
+    
+    if (permitirEmail && cuotaMinima != -1){ // Si se permite el envío de emails y se establece una cuota minima
+      if (!checkEmail(data[i])){ // Si el correo no es valido pasa al siguiente
+        celdaExito.setValue(valores[1]); 
         celdaExito.setBackground("#F5BCA9");
         continue;
       }
       
-      if (cuota <= cuotaMinima){ // Si se supera la cuota minima establecida termina
+      if (cuota == 0){ // Si se agota la cuota diaria pasa al siguiente
         celdaExito.setValue(valores[2]);
         celdaExito.setBackground("#F5BCA9");
         continue;
       }
+      
+      if (cuota <= cuotaMinima){ // Si se supera la cuota minima establecida, pasa al siguiente
+        celdaExito.setValue(valores[3]);
+        celdaExito.setBackground("#F5BCA9");
+        continue;
+      }
+      
+      // Si no se cumple ninguna de las tres anteriores se podrá enviar el correo de bienvenida
     }
-    
-    
-    
-    // En desarrollo
-    // Se debe tener en cuenta que si no se establece cuota minima, lo que hacer si el correo esta mal formado
-    
-    
-    
     
     var alumno = data[i],
         usuario = alumno[0],
@@ -232,22 +232,30 @@ function createUsers(permitirEmail, cuotaMinima){
         correoContacto = alumno[12],
         creado= alumno[13];
     
-    // Si el alumno ya ha sido creado con anterioridad pasa al siguiente registro
-    if (creado == valores[6]){
-      continue;
-    }
+  
+    var exito= addUser(usuario+"@"+dominio, nombre, apellidos, pass, unidadOrg);
     
-    // Realizando pruebas
-    //var exito= addUser(usuario+"@"+dominio, nombre, apellidos, pass, unidadOrg);
-    
-    var exito="exito";
     if (exito == "exito"){
       if (permitirEmail){
-        sendEmail(correoContacto, usuario+"@"+dominio, pass, nombre);
+        if (checkEmail(data[i])){
+          if (cuota != 0){
+            sendEmail(correoContacto, usuario+"@"+dominio, pass, nombre);
+            celdaExito.setValue(valores[4]); // usuario creado y email enviado
+            celdaExito.setBackground("#D8F6CE");
+          }else{
+            celdaExito.setValue(valores[5]); // usuario creado pero la cuota diaria de envio de emails se ha agotado
+            celdaExito.setBackground("#F5DA81");
+          }
+          
+        }else{
+          celdaExito.setValue(valores[6]); // usuario creado pero el email no es valido
+          celdaExito.setBackground("#F5DA81");
+        }
+      }else{
+        celdaExito.setValue(valores[7]); // usuario creado. configurado para no enviar email
+        celdaExito.setBackground("#D8F6CE");
       }
       
-      celdaExito.setValue(valores[6]);
-      celdaExito.setBackground("#D8F6CE");
       usuariosCreados++;
     }else{
       celdaExito.setValue(exito);
@@ -255,8 +263,7 @@ function createUsers(permitirEmail, cuotaMinima){
     }
   }
   
-  confirmation("Trabajo finalizado", "Ha terminado la ejecución del programa. Se crearon "+usuariosCreados+" usuarios.");
-  //return usuariosCreados;
+  return usuariosCreados;
 }
 
 // Abre un cuadro de dialogo que permite seleccionar una unidad organizativa
