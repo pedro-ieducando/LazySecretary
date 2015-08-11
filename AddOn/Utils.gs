@@ -7,10 +7,6 @@ function checkData(alumno){
     }
   }
   
-  if(alumno[12] == ""){
-    return false;
-  }
-  
   return true;
 }
 
@@ -244,38 +240,38 @@ function sendEmail(destinatario, usuario, pass, nombre){
 
       +'<div style="font-weight:bold; font-size:20pt; color: #878787;">'+valores[12]+'</div>'
 
-      +'<!-- Gmail --><img src="https://imagizer.imageshack.us/v2/64x46q90/r/537/Oqyt4a.png" /><br /><a style="font-size:14pt;" href="http://mail.google.com">Gmail</a>'
+      +'<!-- Gmail --><img src="http://i.imgur.com/LpS8rQ9.png" /><br /><a style="font-size:14pt;" href="http://mail.google.com">Gmail</a>'
       +'<div style="color:#656565;">'+valores[13]+'.</div><br><br>'
 
-      +'<!-- Talk / Hangouts --><img src="https://imagizer.imageshack.us/v2/64x64q90/r/673/X4UitP.png" /><br /><a style="font-size:14pt;" href="http://www.google.es/hangouts/">Talk / Hangouts</a>'
+      +'<!-- Hangouts --><img src="http://i.imgur.com/qnaPCvu.png" /><br /><a style="font-size:14pt;" href="http://www.google.es/hangouts/">Hangouts</a>'
       +'<div style="color:#656565;">'+valores[14]+'</div><br><br>'
 
-      +'<!-- Calendar --><img src="https://imagizer.imageshack.us/v2/64x54q90/r/540/Nd1Pcp.png" /><br /><a style="font-size:14pt;" href="http://calendar.google.com">Calendar</a>'
+      +'<!-- Calendar --><img src="http://i.imgur.com/PGRnI53.png" /><br /><a style="font-size:14pt;" href="http://calendar.google.com">Calendar</a>'
       +'<div style="color:#656565;">'+valores[15]+'</div><br><br>'
 
-      +'<!-- Google+ --><img src="https://imagizer.imageshack.us/v2/64x64q90/r/538/kj10iP.png" /><br /><a style="font-size:14pt;" href="http://plus.google.com">Google+</a>'
+      +'<!-- Google+ --><img src="http://i.imgur.com/wo8joYb.png" /><br /><a style="font-size:14pt;" href="http://plus.google.com">Google+</a>'
       +'<div style="color:#656565;">'+valores[16]+'</div><br><br>'
 
       +'<div style="font-weight:bold; font-size:20pt; color: #878787;">'+valores[17]+'</div>'
 
-      +'<!-- Drive --><img src="https://imagizer.imageshack.us/v2/64x53q90/r/537/zNdrGw.png" /><br /><a style="font-size:14pt;" href="http://drive.google.com">Drive</a>'
+      +'<!-- Drive --><img src="http://i.imgur.com/o9cPX2V.png" /><br /><a style="font-size:14pt;" href="http://drive.google.com">Drive</a>'
       +'<div style="color:#656565;">'+valores[18]+'</div><br><br>'
 
       +'<div style="font-weight:bold; font-size:20pt; color: #878787;">'+valores[19]+'</div>'
 
-      +'<!-- Docs --><img src="https://imagizer.imageshack.us/v2/52x64q90/r/661/sQ8R9g.png" /><br /><a style="font-size:14pt;" href="http://docs.google.com">Docs</a>'
+      +'<!-- Docs --><img src="http://i.imgur.com/lM48l47.png" /><br /><a style="font-size:14pt;" href="http://docs.google.com">Docs</a>'
       +'<div style="color:#656565;">'+valores[20]+'</div><br><br>'
 
-      +'<!-- Sheets --><img src="https://imagizer.imageshack.us/v2/50x64q90/r/910/QUzX4t.png" /><br /><a style="font-size:14pt;" href="http://sheets.google.com">Sheets</a>'
+      +'<!-- Sheets --><img src="http://i.imgur.com/uGM3hpI.png" /><br /><a style="font-size:14pt;" href="http://sheets.google.com">Sheets</a>'
       +'<div style="color:#656565;">'+valores[21]+'</div><br><br>'
 
-      +'<!-- Forms --><img src="https://imagizer.imageshack.us/v2/53x64q90/r/540/KJnYH6.png" /><br /><a style="font-size:14pt;" href="http://forms.google.com">Forms</a>'
+      +'<!-- Forms --><img src="http://i.imgur.com/D2y8TY1.png" /><br /><a style="font-size:14pt;" href="http://forms.google.com">Forms</a>'
       +'<div style="color:#656565;">'+valores[22]+'</div><br><br>'
 
-      +'<!-- Slides --><img src="https://imagizer.imageshack.us/v2/52x64q90/r/537/cqAZKA.png" /><br /><a style="font-size:14pt;" href="http://slides.google.com">Slides</a>'
+      +'<!-- Slides --><img src="http://i.imgur.com/OM6qd8F.png" /><br /><a style="font-size:14pt;" href="http://slides.google.com">Slides</a>'
       +'<div style="color:#656565;">'+valores[23]+'</div><br><br>'
 
-      +'<!-- Sites --><img src="https://imagizer.imageshack.us/v2/64x56q90/r/661/blhVle.png" /><br /><a style="font-size:14pt;" href="http://sites.google.com">Sites</a>'
+      +'<!-- Sites --><img src="http://i.imgur.com/8j9Nkl4.png" /><br /><a style="font-size:14pt;" href="http://sites.google.com">Sites</a>'
       +'<div style="color:#656565;">'+valores[24]+'</div><br><br>'
 
     +'<a href="http://www.google.es/about/products/">'+valores[25]+'</a>'
