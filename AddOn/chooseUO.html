@@ -5,9 +5,12 @@
 <script>
   // Valores de las cadenas de texto
   parrafoInstrucciones= 
-    "Selecciona una Unidad Organizativa de la lista. Si no existe, puedes crearla en la consola de administración de tu dominio y pulsar en 'Actualizar' para recargar la lista. Para poder seleccionar una Unidad organizativa, la hoja debe estar rellena con al menos un usuario.";
+    "Selecciona una Unidad Organizativa de la lista. Si no existe, puedes crearla en la consola de administración de tu dominio y pulsar en 'Actualizar' para recargar la lista. Para poder seleccionar una Unidad organizativa, la hoja de cálculo debe estar rellena con los datos de, al menos, un usuario.";
   loadButton= "Actualizar";
   submitButton= "Seleccionar";
+  errorLoadOrgUnits= "Ha ocurrido un error al cargar las unidades organizativas, intentalo de nuevo más tarde.";
+  cancelButtonDone= "Hecho";
+  cancelButtonCancel= "Cancelar";
       
   window.onload = function() {
     init();
@@ -15,20 +18,28 @@
   
   function init(){
     var leng= window.navigator.language;
+    
     if (leng != "es"){
       google.script.run.withSuccessHandler(translateParrafoInstrucciones).translate(parrafoInstrucciones, leng);
       google.script.run.withSuccessHandler(translateLoadButton).translate(loadButton, leng);
       google.script.run.withSuccessHandler(translateSubmitButton).translate(submitButton, leng);
+      google.script.run.withSuccessHandler(translateErrorLoadOrgUnits).translate(errorLoadOrgUnits, leng);
+      google.script.run.withSuccessHandler(translateCancelButtonDone).translate(cancelButtonDone, leng);
+      google.script.run.withSuccessHandler(translateCancelButtonCancel).translate(cancelButtonCancel, leng);
     }else{
       continueInit();
     }
   }
   
   function continueInit(){
+    
     document.getElementById("parrafoInstrucciones").innerHTML= parrafoInstrucciones;
     document.getElementById("loadButton").value= loadButton;
     document.getElementById("submitButton").value= submitButton;
+    document.getElementById("cancelButton").value= cancelButtonCancel;
     document.getElementById("contenido").style.display= "inline";
+    document.getElementById("cargaPagina").style.display= "none";
+    
     cargarCombo();
   }
   
@@ -37,10 +48,14 @@
   function translateLoadButton(texto){
     loadButton= texto; }
   function translateSubmitButton(texto){
-    submitButton= texto;
-    continueInit();
-  }
-  
+    submitButton= texto; }
+  function translateErrorLoadOrgUnits(texto){
+    errorLoadOrgUnits= texto; }
+  function translateCancelButtonDone(texto){
+    cancelButtonDone= texto; }
+  function translateCancelButtonCancel(texto){
+    cancelButtonCancel= texto;
+    continueInit();}
 
   // Devuelve las unidades organizativas del dominio y las pasa a la funcion que las muestra
   function cargarCombo(){
@@ -67,8 +82,7 @@
     document.getElementById("imagenCarga").style.display= "none"; // Oculta la imagen de carga
     
     if (orgUnits == null){ // Si las unidades organizativas estan a nulo muestra un mensaje de error
-      var error= "Ha ocurrido un error al cargar las unidades organizativas, intentalo de nuevo más tarde."
-      document.getElementById("msgError").innerHTML= error;
+      document.getElementById("msgError").innerHTML= errorLoadOrgUnits;
     }else{ // En caso contrario rellena el combo con las que hubiera
       var combo= document.getElementById("cmb");
       
@@ -88,13 +102,22 @@
   
   // Confirma la seleccion de la unidad organizativa
   function enviar(){
+    document.getElementById("submitButton").disabled= true;
+    document.getElementById("cancelButton").disabled= true;
+    
     var combo= document.getElementById("cmb");
     var valorAPasar= combo.options[combo.selectedIndex].text;
-    google.script.run.withSuccessHandler(close).UOSelected(valorAPasar); // Cambia el valor de todos los registros
+    google.script.run.withSuccessHandler(finish).UOSelected(valorAPasar); // Cambia el valor de todos los registros
   }
   
   // Cierra el cuadro de dialogo de seleccion de unidad organizativa
-  function close(){
+  function finish(){
+    document.getElementById("submitButton").disabled= false;
+    document.getElementById("cancelButton").value= cancelButtonDone;
+    document.getElementById("cancelButton").disabled= false;
+  }
+  
+  function cerrar(){
     google.script.host.close();
   }
 </script>
@@ -102,12 +125,18 @@
 <style>
   p { text-align: justify; margin-bottom: 50px;}
   form { }
+  #contenido {display:none; text-align: justify;}
   #imagenCarga {position:absolute; float:right; margin-top:6px; margin-left:10px; width: 15px; display:none; }
   #msgError { position: absolute; float: left; margin-top: -35px; }
+  #cargaPagina { top: 40%; left:50%; position: absolute; }
 </style>
 </head>
 
 <body>
+<div id="cargaPagina">
+    <img src="http://i.imgur.com/jB43NZD.gif" />
+</div>
+  
 <div id="contenido">
   <p id="parrafoInstrucciones"></p>
   
@@ -123,6 +152,7 @@
     
     <input class="action" id="submitButton" style="background-color: #CDCDCD;" type="button" value="" onclick="enviar()" disabled />
     <input id="loadButton" type="button" value="" onclick="cargarCombo()">
+    <input id="cancelButton" type="button" value="" onclick="cerrar()">
     
   </form>
 </div>
