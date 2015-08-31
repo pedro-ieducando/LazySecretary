@@ -115,9 +115,6 @@ function initialize(){
     hoja.clear();
     hoja.setFrozenRows(1);
     
-    //var hoja= SpreadsheetApp.getActive().insertSheet("Lazy Secretary"); // Para la proxima version
-    //hoja.setFrozenRows(1);
-    
     hoja.getRange('A1').setBackground("#CEE3F6").setValue("  "+valores[0]+" *  "); // Nombre de usuario en el dominio
     hoja.getRange('B1').setBackground("#CEE3F6").setValue("  "+valores[1]+" *  "); // Contraseña que usará el usuario
     hoja.getRange('C1').setBackground("#CEE3F6").setValue("  "+valores[2]+" *  ");
@@ -259,7 +256,6 @@ function createUsers(permitirEmail, cuotaMinima){
     }
   }
   
-  //sheet.setName(unidadOrg); Para la proxima version
   return usuariosCreados;
 }
 
