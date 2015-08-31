@@ -1,147 +1,260 @@
-<html>
-<head>
-  <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+<!DOCTYPE html>
 
+  <!-- All script code -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
   <script>
     // Valores de las cadenas de texto
-    _0= "Paso 1: rellena la hoja";
-    _1= "Para empezar, debes cumplimentar la hoja de cálculo de la siguiente manera (vamos a tomar como ejemplo al usuario judith.smith@example.com):";
-    _2= "Nombre de usuario: judith.smith";
-    _3= "Contraseña: la que quieras (procura que sea segura)";
-    _4= "Nombre: Judith";
-    _5= "Apellidos: Smith";
-    _6= "Dominio: example.com";
-    _7= "Unidad Organizativa (ruta): no rellenes este campo aun, podrás hacerlo más adelante.";
-    _8= "Correo de contacto: el que quieras";
-    _9= "Los otros campos no son obligatorios ni van a ser usados. Solo estáń ahí por si decides guardar más información de los usuarios que quieres crear. Ve al paso 2 cuando hayas terminado.";
-    _10= "Paso 2: elige Unidad Organizativa";
-    _11= "Ahora es el momento de selecccionar una U.O. (obligatorio haber completado el primer paso). Pulsa el botón 'Seleccionar' y se abrirá un cuadro de diálogo. Sigue las instrucciones y todo irá bien. Cuando hayas terminado, ve al paso 3.";
-    _12= "Paso 3: configuracion";
-    _13= "Configura las diferentes opciones que se te ofrecen para crear los usuarios. Puedes decidir si enviar correos electrónicos de bienvenida y, dependiendo de la cuota de envio diario que te quede, en que momento terminar la ejecución:";
-    _14= "Enviar correo de bienvenida: con esta opción podrás decidir si enviar un correo de bienvenida a los nuevos usuarios. Asegurate de escribir bien el correo electrónico en el campo 'Correo de contacto'.";
-    _15= "Si decides enviar mensajes de bienvenida, puedes parar la ejecución cuando te quede poca o ninguna cuota de envío, en caso de que quieras enviar un correo de forma obligatoria para que los usuarios conozcan sus credenciales. Si dejas este cuadro en blanco, se enviarán mensajes hasta agotar la cuota y se seguirán creando usuarios incluso después de haberla agotado. Si indicas un número de cuota, antes de crear el usuario, se validará el campo Correo de contacto y se comprobará que tu cuota no sea inferior al número que has definido:";
-    _16= "Paso 4: crea los usuarios";
-    _17= "Ahora si, vamos a crear los usuarios. Pulsa el botón 'Crear' para introducir los usuarios en tu dominio. Si has decidido enviar correos electrónicos de bienvenida, asegúrate de haber cumplimentado el campo 'Correo de contacto'";
-    btnSelectUO= "Seleccionar";
+    _0= "Paso 1: Inicializar";
+    _1= "Eliminar todos los datos y preparar esta hoja.";
+    btnInitialize= "Inicializar";
+    
+    _2= "Paso 2: Aportar información";
+    _3= "Rellena los campos con '*', los otros no se usarán pero pueden ser de utilidad. Vamos a tomar como ejemplo al usuario judith.smith@example.com:";
+    _4= "Nombre de usuario: judith.smith";
+    _5= "Contraseña: la que quieras (procura que sea segura)";
+    _6= "Nombre: Judith";
+    _7= "Apellidos: Smith";
+    _8= "Correo de contacto: dirección a la que se enviará la información de la nueva cuenta.";
+    _9= "Cuando hayas terminado, selecciona la Unidad Organizativa donde vas a introducir los nuevos usuarios:";
+    msgError= "Error al cargar las unidades organizativas, intentalo de nuevo más tarde.";
+    btnSelectUO= "Seleccionar U.O.";
+    backButton="Atrás";
+    nextButton="Continuar";
+    
+    _10= "Paso 3: Configurar y crear";
+    lblSendMail= "Enviar correo electrónico de bienvenida";
+    lblTextCantidad= "Google limita a los usuarios con cuenta de Google Apps con el envío de un máximo de 1500 mensajes de correo electrónico por día. Para evitar el uso de todos ellos cuando estés añadiendo usuarios, puedes introducir en el cuadro de texto de abajo, un número de mensajes de correo electrónico que quieras mantener.";
     btnCreateUsers= "Crear";
-    lblRadioMailYes= "Si";
-    lblRadioMailNo= "No";
-    lblTextCantidad= "Cuota diaria";
+    
       
     window.onload = function() {
-      init();
+      $("#cargaPagina").fadeIn("fast");
+      google.script.run.withSuccessHandler(init).getLanguage();
     };
     
-    function init(){
-      var leng= window.navigator.language;
+    function init(lang){
       
-      if (leng != "es"){
-        google.script.run.withSuccessHandler(t0).translate(_0, leng);
-        google.script.run.withSuccessHandler(t1).translate(_1, leng);
-        google.script.run.withSuccessHandler(t2).translate(_2, leng);
-        google.script.run.withSuccessHandler(t3).translate(_3, leng);
-        google.script.run.withSuccessHandler(t4).translate(_4, leng);
-        google.script.run.withSuccessHandler(t5).translate(_5, leng);
-        google.script.run.withSuccessHandler(t6).translate(_6, leng);
-        google.script.run.withSuccessHandler(t7).translate(_7, leng);
-        google.script.run.withSuccessHandler(t8).translate(_8, leng);
-        google.script.run.withSuccessHandler(t9).translate(_9, leng);
-        google.script.run.withSuccessHandler(t10).translate(_10, leng);
-        google.script.run.withSuccessHandler(t11).translate(_11, leng);
-        google.script.run.withSuccessHandler(t12).translate(_12, leng);
-        google.script.run.withSuccessHandler(t13).translate(_13, leng);
-        google.script.run.withSuccessHandler(t14).translate(_14, leng);
-        google.script.run.withSuccessHandler(t15).translate(_15, leng);
-        google.script.run.withSuccessHandler(t16).translate(_16, leng);
-        google.script.run.withSuccessHandler(t17).translate(_17, leng);
+      if (lang != "es"){
+        google.script.run.withSuccessHandler(function (texto){_0=texto;}).translate(_0, lang);
+        google.script.run.withSuccessHandler(function (texto){_1=texto;}).translate(_1, lang);
+        google.script.run.withSuccessHandler(function (texto){btnInitialize=texto;}).translate(btnInitialize, lang);
         
-        google.script.run.withSuccessHandler(tBtnSelectUO).translate(btnSelectUO, leng);
-        google.script.run.withSuccessHandler(tBtnCreateUsers).translate(btnCreateUsers, leng);
-        google.script.run.withSuccessHandler(tLblRadioMailYes).translate(lblRadioMailYes, leng);
-        google.script.run.withSuccessHandler(tLblRadioMailNo).translate(lblRadioMailNo, leng);
-        google.script.run.withSuccessHandler(tLblTextCantidad).translate(lblTextCantidad, leng);
+        google.script.run.withSuccessHandler(function (texto){_2=texto;}).translate(_2, lang);
+        google.script.run.withSuccessHandler(function (texto){_3=texto;}).translate(_3, lang);
+        google.script.run.withSuccessHandler(function (texto){_4=texto;}).translate(_4, lang);
+        google.script.run.withSuccessHandler(function (texto){_5=texto;}).translate(_5, lang);
+        google.script.run.withSuccessHandler(function (texto){_6=texto;}).translate(_6, lang);
+        google.script.run.withSuccessHandler(function (texto){_7=texto;}).translate(_7, lang);
+        google.script.run.withSuccessHandler(function (texto){_8=texto;}).translate(_8, lang);
+        google.script.run.withSuccessHandler(function (texto){_9=texto;}).translate(_9, lang);
+        google.script.run.withSuccessHandler(function (texto){msgError=texto;}).translate(msgError, lang);
+        google.script.run.withSuccessHandler(function (texto){btnSelectUO=texto;}).translate(btnSelectUO, lang);
+        google.script.run.withSuccessHandler(function (texto){backButton=texto;}).translate(backButton, lang);
+        google.script.run.withSuccessHandler(function (texto){nextButton=texto;}).translate(nextButton, lang);
+        
+        google.script.run.withSuccessHandler(function (texto){_10=texto;}).translate(_10, lang);
+        google.script.run.withSuccessHandler(function (texto){lblSendMail=texto;}).translate(lblSendMail, lang);
+        google.script.run.withSuccessHandler(function (texto){lblTextCantidad=texto;}).translate(lblTextCantidad, lang);
+        google.script.run.withSuccessHandler(
+          function (texto){
+            btnCreateUsers=texto;
+            continueInit();
+          }
+        ).translate(btnCreateUsers, lang);
       }else{
         continueInit();
       }
     }
     
-    function t0(texto){ _0= texto; }
-    function t1(texto){ _1= texto; }
-    function t2(texto){ _2= texto; }
-    function t3(texto){ _3= texto; }
-    function t4(texto){ _4= texto; }
-    function t5(texto){ _5= texto; }
-    function t6(texto){ _6= texto; }
-    function t7(texto){ _7= texto; }
-    function t8(texto){ _8= texto; }
-    function t9(texto){ _9= texto; }
-    function t10(texto){ _10= texto; }
-    function t11(texto){ _11= texto; }
-    function t12(texto){ _12= texto; }
-    function t13(texto){ _13= texto; }
-    function t14(texto){ _14= texto; }
-    function t15(texto){ _15= texto; }
-    function t16(texto){ _16= texto; }
-    function t17(texto){ _17= texto; }
-    function tBtnSelectUO(texto){ btnSelectUO= texto; }
-    function tBtnCreateUsers(texto){ btnCreateUsers= texto; }
-    function tLblRadioMailYes(texto){ lblRadioMailYes= texto; }
-    function tLblRadioMailNo(texto){ lblRadioMailNo= texto; }
-    function tLblTextCantidad(texto){ lblTextCantidad= texto; continueInit(); }
-    
     function continueInit(){
-      document.getElementById("0").innerHTML= _0;
-      document.getElementById("1").innerHTML= _1;
-      document.getElementById("2").innerHTML= _2;
-      document.getElementById("3").innerHTML= _3;
-      document.getElementById("4").innerHTML= _4;
-      document.getElementById("5").innerHTML= _5;
-      document.getElementById("6").innerHTML= _6;
-      document.getElementById("7").innerHTML= _7;
-      document.getElementById("8").innerHTML= _8;
-      document.getElementById("9").innerHTML= _9;
-      document.getElementById("10").innerHTML= _10;
-      document.getElementById("11").innerHTML= _11;
-      document.getElementById("12").innerHTML= _12;
-      document.getElementById("13").innerHTML= _13;
-      document.getElementById("14").innerHTML= _14;
-      document.getElementById("15").innerHTML= _15;
-      document.getElementById("16").innerHTML= _16;
-      document.getElementById("17").innerHTML= _17;
-      document.getElementById("btnSelectUO").innerHTML= btnSelectUO;
-      document.getElementById("btnCreateUsers").innerHTML= btnCreateUsers;
-      document.getElementById("lblRadioMailYes").innerHTML= lblRadioMailYes;
-      document.getElementById("lblRadioMailNo").innerHTML= lblRadioMailNo;
-      document.getElementById("lblTextCantidad").innerHTML= lblTextCantidad;
-    
-      document.getElementById("contenido").style.display= "block";
-      document.getElementById("cargaPagina").style.display= "none";
+      // Step 1
+      $("#0").html(_0);
+      $("#1").html(_1);
+      $("#btnInitialize").html(btnInitialize);
+      $("#nextButton1").html(nextButton);
+      
+      // Step 2
+      $("#2").html(_2);
+      $("#3").html(_3);
+      $("#4").html(_4);
+      $("#5").html(_5);
+      $("#6").html(_6);
+      $("#7").html(_7);
+      $("#8").html(_8);
+      $("#9").html(_9);
+      $("#btnSelectUO").html(btnSelectUO);
+      $("#backButton2").html(backButton);
+      
+      // Step 3
+      $("#10").html(_10);
+      $("#lblSendMail").html(lblSendMail);
+      $("#lblTextCantidad").html(lblTextCantidad);
+      $("#btnCreateUsers").html(btnCreateUsers);
+      $("#backButton3").html(backButton);
+      
+      // Init actions
+      $("#cargaPagina").fadeOut("fast");
+      $("#step1").fadeIn("fast");
     }
     
-    function seleccionarUO(){
-      google.script.run.chooseUO();
-    }
     
-    function mailListener(){
-      var seleccionado= document.getElementById("radioMailYes").checked;
-      if (seleccionado == false){
-        document.getElementById("txtCantidad").disabled = true;
-        document.getElementById("txtCantidad").value = "";
+    // Navegacion entre pasos
+    function navigate(id, action){
+      if(id == "to2"){
+        $("#step1").css("display", "none");
+        $("#step2").fadeIn("fast");
+        $("#step3").css("display", "none");
+        if (action == "load"){ cargarCombo(); }
+      }else if(id == "to3"){
+        $("#step1").css("display", "none");
+        $("#step2").css("display", "none");
+        $("#step3").fadeIn("fast");
       }else{
-        document.getElementById("txtCantidad").disabled = false;
+        $("#step1").fadeIn("fast");
+        $("#step2").css("display", "none");
+        $("#step3").css("display", "none");
+      }
+    }
+    
+    
+    // Al inicializar la hoja
+    function inicializarHoja(){
+      $("#cargaPagina").fadeIn("fast");
+      $('button').attr('disabled',true);
+      $('input').attr('disabled',true);
+      
+      google.script.run.withSuccessHandler(inicializarHojaHandler).initialize();
+    }
+    
+    
+    // Cuando la hoja ya se ha inicializado
+    function inicializarHojaHandler(exito){
+      if (exito == false){
+        google.script.run.withSuccessHandler().confirmation(
+          "Error al inicializar",
+          "Tienes alguna otra hoja con el nombre 'Lazy Secretary'. No podrás inicializar esta hoja hasta que no modifiques el nombre de la otra."
+        )
+      }else{
+        navigate("to2");
+        cargarCombo();
+      }
+      
+      $("#cargaPagina").fadeOut("fast");
+      $("button:not(.to3)").attr("disabled", false);
+      
+      if ($("#sendMail").is(":checked")){
+        $('input').attr('disabled',false);
+      }else{
+        $("input:not(#txtCantidad)").attr("disabled", false);
+      }
+    }
+    
+    
+    // Devuelve las unidades organizativas del dominio y las pasa a la funcion que las muestra
+    function cargarCombo(){
+      $("button").attr("disabled", true);
+      $("input").attr("disabled", true);
+      
+      $("#msgError").html("");
+      $("#imagenCarga").fadeIn("fast"); // Imagen de carga
+      google.script.run.withSuccessHandler(cargarUO).cargarUO();
+    }
+    
+    
+    // Rellena el combo con las unidades organizativas que recibe por parametros
+    function cargarUO(orgUnits){
+    
+      $("#imagenCarga").fadeOut("fast"); // Oculta la imagen de carga
+    
+      if (orgUnits == null){ // Si no se han recibido unidades organizativas muestra un mensaje de error
+        $("#msgError").html(msgError);
+        $("button:not(.to3)").attr("disabled", false);
+        
+        if ($("#sendMail").is(":checked")){
+          $('input').attr('disabled',false);
+        }else{
+          $("input:not(#txtCantidad)").attr("disabled", false);
+        }
+        
+      }else{
+        vaciarCombo(); // Vacia el combo
+        var combo= document.getElementById("cmb");
+        
+        // Añadimos tantas opciones como unidades organizativas haya
+        for (var i=0; i<orgUnits.length; i++){
+          var option = document.createElement("option");
+          option.text = orgUnits[i].orgUnitPath;
+          option.value = orgUnits[i].orgUnitId;
+          combo.add(option);
+        }
+        
+        $("button").attr("disabled", false);
+        
+        if ($("#sendMail").is(":checked")){
+          $('input').attr('disabled',false);
+        }else{
+          $("input:not(#txtCantidad)").attr("disabled", false);
+        }
+      }
+    }
+    
+    
+    // Vacía el combo de opciones
+    function vaciarCombo(){
+      var combo= document.getElementById("cmb");
+      while (combo.options.length > 0){
+        combo.remove(0);
+      }
+    }
+    
+    
+    // Confirma la seleccion de la unidad organizativa
+    function enviar(){
+      $("button").attr("disabled", true);
+      $("input").attr("disabled", true);
+      
+      var combo= document.getElementById("cmb");
+      var valorAPasar= combo.options[combo.selectedIndex].text;
+      
+      google.script.run.withSuccessHandler(
+        function(){
+          $("button").attr("disabled", false);
+          
+          if ($("#sendMail").is(":checked")){
+            $('input').attr('disabled',false);
+          }else{
+            $("input:not(#txtCantidad)").attr("disabled", false);
+          }
+          
+          navigate("to3");
+        }
+      ).UOSelected(valorAPasar); // Cambia el valor de todos los registros
+    }
+    
+    
+    // Permitir o no el envío de correo
+    function mailListener(){
+      if (!$("#sendMail").is(":checked")){
+        $("#txtCantidad").attr("disabled", true);
+        $("#txtCantidad").val("");
+      }else{
+        $("#txtCantidad").attr("disabled", false);
       }
     }
     
     // Empezamos a crear los usuarios
     function crearUsuarios(){
-      document.getElementById("waitCreateUsers").style.display= "inline"; // Dibujamos la imagen de carga
+      $("#cargaPagina").fadeIn("fast");
+      $("button").attr("disabled", true);
+      $("button").attr("disabled", true);
       
-      var permitirEmail= document.getElementById("radioMailYes").checked; // Comprobamos si permitimos el envio de correos
+      var permitirEmail= $("#sendMail").is(":checked"); // Comprobamos si permitimos el envio de correos
       
       if (permitirEmail){
-        var cuotaMinima= document.getElementById("txtCantidad").value; // Comprobamos la cantidad minima que el usuario quiere que le quede
+        var cuotaMinima= $("#txtCantidad").val(); // Comprobamos la cantidad minima de mensajes que el usuario quiere guardar
         if (cuotaMinima==""){
-          cuotaMinima= -1; // Si no establece una cantidad, entonces no le quedará ninguno en caso de ser demasiados
+          cuotaMinima= -1; // Si no establece una cantidad se usarán los que sean necesarios
         }
         
         google.script.run.withSuccessHandler(usuariosCreados).createUsers(permitirEmail, cuotaMinima);
@@ -153,70 +266,102 @@
     
     // Devolvemos la cantidad de usuarios creados
     function usuariosCreados(cantidad){
-      google.script.run.withSuccessHandler().confirmation("Trabajo finalizado", "Ha terminado la ejecución del programa. Se crearon "+cantidad+" usuarios.");
-      document.getElementById("waitCreateUsers").style.display= "none";
+      if (cantidad != null){
+        google.script.run.withSuccessHandler().confirmation("Trabajo finalizado", "Ha terminado la ejecución del programa. Se crearon "+cantidad+" usuarios.");
+      }
+      
+      $("#cargaPagina").fadeOut("fast");
+      $('button').attr('disabled',false);
+      
+      if ($("#sendMail").is(":checked")){
+        $('input').attr('disabled',false);
+      }else{
+        $("input:not(#txtCantidad)").attr("disabled", false);
+      }
     }
     
+    // End-script
   </script>
 
+<!-- All style code -->
+  <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
   <style>
-    #contenido { display: none; padding-left: 8px; padding-right: 8px; padding-bottom: 10px; text-align: justify;}
-    #cargaPagina { top: 50%; left:45%; position: absolute; }
-    #waitCreateUsers {position:absolute; float:right; margin-top:6px; margin-left:10px; width: 15px; display:none; }
+    #step1, #step2, #step3 { display: none; padding-left: 8px; padding-right: 8px; padding-bottom: 10px; text-align: justify;}
+    #cargaPagina { top: 50%; left:45%; position: absolute; display: none;}
+    #formEmail, #formCuota { padding-left: 10px; padding-right: 10px; padding-top: 15px; }
     #lblRadioMailYes {margin-right: 20px;}
+    #actions1, #actions2, #actions3 { bottom: 0px; margin-bottom: 15px; position: absolute; }
+    #cmb { max-width: 250px }
+    #imagenCarga {position:absolute; float:right; margin-top:6px; margin-left:9px; width: 15px; display:none; }
     h3 {margin-bottom: -12px; margin-top: 20px;}
+    button { margin-right: -10px; }
+    
   </style>
-</head>
 
-<body>
-  <div id="cargaPagina">
-    <img src="http://i.imgur.com/jB43NZD.gif" />
+
+<!-- All html code -->
+  <div>
+    <img id="cargaPagina" src="http://i.imgur.com/jB43NZD.gif" />
   </div>
   
-  <div id="contenido">
-      <h3 id="0"></h3>
-      <p id="1"></p>
-      <ul>
-        <li id="2"></li>
-        <li id="3"></li>
-        <li id="4"></li>
-        <li id="5"></li>
-        <li id="6"></li>
-        <li id="7"></li>
-        <li id="8"></li>
-      </ul>
-      <p id="9"></p>
-      
-      <h3 id="10"></h3>
-      <p id="11"><p>
-      <button class="action" id="btnSelectUO" onclick="seleccionarUO()"></button>
-      
-      <h3 id="12"></h3>
-      <p style="margin-bottom: -7px;" id="13"></p>
-      
-      <div id="formEmail">
-        <p id="14"></p>
-        <span>
-          <input type="radio" name="radioMail" id="radioMailYes" onclick="mailListener()" checked />
-          <label id="lblRadioMailYes" ></label>
-        
-          <input type="radio" name="radioMail" id="radioMailNo" onclick="mailListener()" />
-          <label id="lblRadioMailNo" ></label>
-        </span>
-      </div>
-      
-      <div class="inline form-group" id="formCuota">
-        <p id="15"></p>
-        <label for="txtCantidad" id="lblTextCantidad"></label>
-        <input type="number" min="0" id="txtCantidad" style="width: 65px;" />
-      </div>
-      
-      <h3 id="16" style="clear:both;"></h3>
-      <p id="17"></p>
+  
+  <!-- Step 1 -->
+  <div id="step1">
+    <h3 id="0"></h3>
+    <p></p>
+    <p id="1"></p>
+    <div id="actions1">
+      <button class="action" id="btnInitialize" onclick="inicializarHoja()"></button>
+      <button id="nextButton1" onclick="navigate('to2','load')"></button>
+    </div>
+  </div>
+  
+  
+  <!-- Step 2 -->
+  <div id="step2">
+    <h3 id="2"></h3>
+    <p></p>
+    <p id="3"></p>
+    <ul>
+      <li id="4"></li>
+      <li id="5"></li>
+      <li id="6"></li>
+      <li id="7"></li>
+      <li id="8"></li>
+    </ul>
+    <p id="9" style="margin-top:25px"></p>
+    <p>
+      <select id="cmb"> </select>
+      <img id="imagenCarga" src="http://i.imgur.com/jB43NZD.gif" />
+    </p>
+    <p>
+      <span id="msgError" class="error"></span>
+    </p>
+    <div id="actions2">
+      <button class="action" id="btnSelectUO" onclick="enviar()"></button>
+      <button id="backButton2" onclick="navigate('to1','none')"></button>
+    </div>
+  </div>
+  
+  
+  <!-- Step 3 -->
+  <div id="step3">
+    <h3 id="10"></h3>
+    <p></p>
+    <div id="formEmail">
+      <span>
+        <input type="checkbox" id="sendMail" onclick="mailListener()" />
+        <label for="sendMail" id="lblSendMail"></label>
+      </span>
+    </div>
+  
+    <div class="inline form-group" id="formCuota">
+      <label for="txtCantidad" id="lblTextCantidad"></label>
+      <input type="number" min="0" id="txtCantidad" style="width: 65px;" disabled />
+    </div>
+  
+    <div id="actions3">
       <button class="create" id="btnCreateUsers" onclick="crearUsuarios()"></button>
-      <img id="waitCreateUsers" src="http://i.imgur.com/jB43NZD.gif" />
+      <button id="backButton3" onclick="navigate('to2','none')" ></button>
+    </div>
   </div>
-  
-</body>
-
-</html>
