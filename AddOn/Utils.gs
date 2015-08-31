@@ -1,7 +1,7 @@
 // Comprueba si todos los campos obligatorios estan rellenados. En caso de que
 // haya alguno sin inicializar, devolvera false
 function checkData(alumno){  
-  for (var i=0; i<6; i++){
+  for (var i=0; i<4; i++){
     if (alumno[i] == ""){
       return false;
     }
@@ -13,7 +13,7 @@ function checkData(alumno){
 
 // Comprueba si la direccion de correo a la que se envian las credenciales está bien formado
 function checkEmail(alumno){
-  var email = alumno[12],
+  var email = alumno[4],
       destino, // Nombre al que va dirigido el correo
       dominio="", // Lo que va despues de la @
       arroba, // Posicion de la @ en la direccion de correo
@@ -115,11 +115,6 @@ function confirmation(title, msg){
      ui.ButtonSet.OK);
 }
 
-function prueba(){
-  var ui= SpreadsheetApp.getUi();
-  //var ui.ButtonSet.
-}
-
 
 // Inserta un usuario en el dominio. Controla varias excepciones
 function addUser(email, nombre, apellidos, pass, orgUnit){
@@ -130,7 +125,7 @@ function addUser(email, nombre, apellidos, pass, orgUnit){
     "El usuario ya existe",
     "Necesitas privilegios para añadir usuarios a tu dominio",
     "No se encuentra la unidad organizativa",
-    "El dominio introducido no es válido",
+    "No es posible encontrar el dominio especificado. Tienes que introducir \n"+"el dominio principal de tu cuenta de Google Apps, o un alias de dominio  \n"+"con estado 'activo'. Por ejemplo, para crear 'judith.smith@example.com', \n"+"el dominio es 'example.com'.",
     "El correo electrónico del nuevo usuario no es válido",
     "La contraseña no es válida"
   ];
@@ -293,7 +288,6 @@ function cargarUO(){
   }catch(e){
     return null;
   }
-  
 }
 
 // Ordena las unidades organizativas por ruta
@@ -305,17 +299,14 @@ function orderUO(a,b) {
 
 // Cuando una unidad organizativa es seleccionada, se modifica la celda correspondiente para todos y cada uno de los usuarios
 function UOSelected(selected){
-  var sheet = SpreadsheetApp.getActiveSheet();
-  var data = getData_(); // Recoge los datos de la hoja de calculo
-  if (data == null){ return; }
-  
-  var contador= 1; // para saber la fila por donde vamos
-  
-  for (var i = 0; i < data.length; i++){
-    contador ++;
-    var celdaUO= sheet.getRange(contador,6);
-    celdaUO.setValue(selected); // Cambia el valor de la celda por la unidad organizativa seleccionada
-  }
+  var userProperties= PropertiesService.getUserProperties();
+  userProperties.setProperty("unidadOrg", selected);
+}
+
+// devuelve el idioma del usuario
+function getLanguage(){
+  var lang= Session.getActiveUserLocale(); // Idioma del usuario
+  return lang;
 }
 
 // traduce cadenas de texto para compatibilizar el complemento con otros idiomas
@@ -324,14 +315,16 @@ function translate(texto, idioma){
   return traducido;
 }
 
-// comprueba que tipo de cuenta tiene el usuario (Google account o Google Apps)
+// Comprueba qué tipo de cuenta tiene el usuario. Si el id de cliente no esta definido quiere decir
+// que lo que posee una cuenta personal, no una cuenta de google apps. En ese caso devolveria nulo
+// para indicar al usuario que no podrá usar el complemento
 function checkAccount(){
-  var mailUser= Session.getActiveUser().getEmail();
-  var dominio= mailUser.substring(mailUser.lastIndexOf("@"));
-  
-  if (dominio == "@gmail.com"){
-    return false;
-  }else{
-    return true;
+  try{
+    var mailUser= Session.getActiveUser().getEmail();
+    var customerId= AdminDirectory.Users.get(mailUser).customerId;
+    
+    return customerId;
+  }catch(e){
+    return null;
   }
 }
