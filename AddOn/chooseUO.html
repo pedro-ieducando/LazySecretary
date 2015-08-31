@@ -1,144 +1,145 @@
-<html>
-<head>
-  <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+<!DOCTYPE html>
 
-<script>
-  // Valores de las cadenas de texto
-  parrafoInstrucciones= 
-    "Selecciona una Unidad Organizativa de la lista. Si no existe, puedes crearla en la consola de administración de tu dominio y pulsar en 'Actualizar' para recargar la lista. Para poder seleccionar una Unidad organizativa, la hoja de cálculo debe estar rellena con los datos de, al menos, un usuario.";
-  loadButton= "Actualizar";
-  submitButton= "Seleccionar";
-  errorLoadOrgUnits= "Ha ocurrido un error al cargar las unidades organizativas, intentalo de nuevo más tarde.";
-  cancelButtonDone= "Hecho";
-  cancelButtonCancel= "Cancelar";
+  <!-- All script code -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+  <script>
+    // Valores de las cadenas de texto
+    _0= "Selecciona una Unidad Organizativa de la lista. Si no existe, puedes crearla en la consola de administración de tu dominio y pulsar el botón 'Refrescar' para recargar la lista. Para poder seleccionar una Unidad organizativa, la hoja de cálculo debe estar rellena con los datos de, al menos, un usuario.";
+    msgError= "Ha ocurrido un error al cargar las unidades organizativas, intentalo de nuevo más tarde.";
+    
+    btnSubmit= "Seleccionar";
+    btnRefresh= "Refrescar";
+    btnCancel= "Cancelar";
+    btnDone= "Hecho";
       
-  window.onload = function() {
-    init();
-  };
+    window.onload = function() {
+      $("#cargaPagina").fadeIn("fast");
+      google.script.run.withSuccessHandler(init).getLanguage();
+    };
   
-  function init(){
-    var leng= window.navigator.language;
+    function init(lang){
     
-    if (leng != "es"){
-      google.script.run.withSuccessHandler(translateParrafoInstrucciones).translate(parrafoInstrucciones, leng);
-      google.script.run.withSuccessHandler(translateLoadButton).translate(loadButton, leng);
-      google.script.run.withSuccessHandler(translateSubmitButton).translate(submitButton, leng);
-      google.script.run.withSuccessHandler(translateErrorLoadOrgUnits).translate(errorLoadOrgUnits, leng);
-      google.script.run.withSuccessHandler(translateCancelButtonDone).translate(cancelButtonDone, leng);
-      google.script.run.withSuccessHandler(translateCancelButtonCancel).translate(cancelButtonCancel, leng);
-    }else{
-      continueInit();
-    }
-  }
-  
-  function continueInit(){
-    
-    document.getElementById("parrafoInstrucciones").innerHTML= parrafoInstrucciones;
-    document.getElementById("loadButton").value= loadButton;
-    document.getElementById("submitButton").value= submitButton;
-    document.getElementById("cancelButton").value= cancelButtonCancel;
-    document.getElementById("contenido").style.display= "inline";
-    document.getElementById("cargaPagina").style.display= "none";
-    
-    cargarCombo();
-  }
-  
-  function translateParrafoInstrucciones(texto){
-    parrafoInstrucciones= texto; }
-  function translateLoadButton(texto){
-    loadButton= texto; }
-  function translateSubmitButton(texto){
-    submitButton= texto; }
-  function translateErrorLoadOrgUnits(texto){
-    errorLoadOrgUnits= texto; }
-  function translateCancelButtonDone(texto){
-    cancelButtonDone= texto; }
-  function translateCancelButtonCancel(texto){
-    cancelButtonCancel= texto;
-    continueInit();}
-
-  // Devuelve las unidades organizativas del dominio y las pasa a la funcion que las muestra
-  function cargarCombo(){
-    document.getElementById("msgError").innerHTML= "";
-    document.getElementById("imagenCarga").style.display= "inline"; // Imagen de carga
-    google.script.run.withSuccessHandler(cargarUO).cargarUO();
-  }
-  
-  // Vacia el combo de opciones
-  function vaciarCombo(){
-    var combo= document.getElementById("cmb");
-    while (combo.options.length > 0){
-      combo.remove(0);
-    }
-  }
-  
-  // Abre un alert con el estilo propio de Google a partir de un titulo y un mensaje a mostrar
-  function customAlert(title, msg){
-    google.script.run.withSuccessHandler().confirmation(title, msg);
-  }
-
-  // Rellena el combo con las unidades organizativas que recibe por parametros
-  function cargarUO(orgUnits){
-    document.getElementById("imagenCarga").style.display= "none"; // Oculta la imagen de carga
-    
-    if (orgUnits == null){ // Si las unidades organizativas estan a nulo muestra un mensaje de error
-      document.getElementById("msgError").innerHTML= errorLoadOrgUnits;
-    }else{ // En caso contrario rellena el combo con las que hubiera
-      var combo= document.getElementById("cmb");
-      
-      vaciarCombo(); // Vacia el combo, por si se ha vuelto a pulsar el boton
-      
-      for (var i=0; i<orgUnits.length; i++){
-        var option = document.createElement("option");
-        option.text = orgUnits[i].orgUnitPath;
-        option.value = orgUnits[i].orgUnitId;
-        combo.add(option);
+      if (lang != "es"){
+        google.script.run.withSuccessHandler(function (texto){_0=texto;}).translate(_0, lang);
+        google.script.run.withSuccessHandler(function (texto){msgError=texto;}).translate(msgError, lang);
+        google.script.run.withSuccessHandler(function (texto){btnSubmit=texto;}).translate(btnSubmit, lang);
+        google.script.run.withSuccessHandler(function (texto){btnRefresh=texto;}).translate(btnRefresh, lang);
+        google.script.run.withSuccessHandler(function (texto){btnCancel=texto;}).translate(btnCancel, lang);
+        google.script.run.withSuccessHandler(
+          function (texto){
+            btnDone=texto;
+            continueInit();
+          }
+        ).translate(btnDone, lang);
+      }else{
+        continueInit();
       }
-      
-      document.getElementById("submitButton").disabled = false; // Habilita el boton para seleccionar la U.O.
-      document.getElementById("submitButton").style.backgroundColor= "#FFFFFF"; // Y le da estilo
     }
-  }
   
-  // Confirma la seleccion de la unidad organizativa
-  function enviar(){
-    document.getElementById("submitButton").disabled= true;
-    document.getElementById("cancelButton").disabled= true;
+    function continueInit(){
+      $("#0").html(_0);
+      $("#btnSubmit").html(btnSubmit);
+      $("#btnRefresh").attr("value", btnRefresh);
+      $("#btnCancel").html(btnCancel);
+      
+      $("#cargaPagina").fadeOut("fast");
+      $("#contenido").fadeIn("fast");
     
-    var combo= document.getElementById("cmb");
-    var valorAPasar= combo.options[combo.selectedIndex].text;
-    google.script.run.withSuccessHandler(finish).UOSelected(valorAPasar); // Cambia el valor de todos los registros
-  }
-  
-  // Cierra el cuadro de dialogo de seleccion de unidad organizativa
-  function finish(){
-    document.getElementById("submitButton").disabled= false;
-    document.getElementById("cancelButton").value= cancelButtonDone;
-    document.getElementById("cancelButton").disabled= false;
-  }
-  
-  function cerrar(){
-    google.script.host.close();
-  }
-</script>
+      cargarCombo();
+    }
 
+    // Devuelve las unidades organizativas del dominio y las pasa a la funcion que las muestra
+    function cargarCombo(){
+      $("button").attr("disabled", true);
+      $("input").attr("disabled", true);
+      
+      $("#msgError").html("");
+      $("#imagenCarga").fadeIn("fast"); // Imagen de carga
+      google.script.run.withSuccessHandler(cargarUO).cargarUO();
+    }
+  
+    // Vacía el combo de opciones
+    function vaciarCombo(){
+      var combo= document.getElementById("cmb");
+      while (combo.options.length > 0){
+        combo.remove(0);
+      }
+    }
+    
+    // Rellena el combo con las unidades organizativas que recibe por parametros
+    function cargarUO(orgUnits){
+      $("#imagenCarga").fadeOut("fast"); // Oculta la imagen de carga
+    
+      if (orgUnits == null){ // Si no se han recibido unidades organizativas muestra un mensaje de error
+        $("#msgError").html(msgError);
+      
+      }else{
+        vaciarCombo(); // Vacia el combo
+        var combo= document.getElementById("cmb");
+        
+        // Añadimos tantas opciones como unidades organizativas haya
+        for (var i=0; i<orgUnits.length; i++){
+          var option = document.createElement("option");
+          option.text = orgUnits[i].orgUnitPath;
+          option.value = orgUnits[i].orgUnitId;
+          combo.add(option);
+        }
+        
+        $("button").attr("disabled", false);
+        $("input").attr("disabled", false);
+      }
+    }
+  
+  
+    // Confirma la seleccion de la unidad organizativa
+    function enviar(){
+      $("button").attr("disabled", true);
+      $("input").attr("disabled", true);
+      
+      var combo= document.getElementById("cmb");
+      var valorAPasar= combo.options[combo.selectedIndex].text;
+      
+      google.script.run.withSuccessHandler(finish).UOSelected(valorAPasar); // Cambia el valor de todos los registros
+    }
+  
+  
+    // Cierra el cuadro de dialogo de seleccion de unidad organizativa
+    function finish(){
+      $("button").attr("disabled", false);
+      $("input").attr("disabled", false);
+      $("#btnCancel").html(btnDone);
+    }
+  
+    // Cierra el cuadro de diálogo
+    function cerrar(){
+      google.script.host.close();
+    }
+    
+    // End-script
+  </script>
+
+
+<!-- All style code -->
+<link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
 <style>
   p { text-align: justify; margin-bottom: 50px;}
-  form { }
+  #cmb { max-width: 550px; min-width: 225px; }
   #contenido {display:none; text-align: justify;}
   #imagenCarga {position:absolute; float:right; margin-top:6px; margin-left:10px; width: 15px; display:none; }
   #msgError { position: absolute; float: left; margin-top: -35px; }
-  #cargaPagina { top: 40%; left:50%; position: absolute; }
+  #cargaPagina { top: 40%; left:50%; position: absolute; display: none;}
+  #actions { bottom: 0px; position: absolute; }
 </style>
-</head>
 
-<body>
+
+<!-- All html code -->
 <div id="cargaPagina">
     <img src="http://i.imgur.com/jB43NZD.gif" />
 </div>
   
 <div id="contenido">
-  <p id="parrafoInstrucciones"></p>
+  <p id="0"></p>
   
   <div id="msgError" class="error"></div>
   
@@ -150,12 +151,13 @@
     
     <br>
     
-    <input class="action" id="submitButton" style="background-color: #CDCDCD;" type="button" value="" onclick="enviar()" disabled />
-    <input id="loadButton" type="button" value="" onclick="cargarCombo()">
-    <input id="cancelButton" type="button" value="" onclick="cerrar()">
-    
+    <div id="actions">
+      <button id="btnSubmit" class="action" onclick="enviar()" disabled ></button>
+      
+      <!-- Si utilizamos la etiqueta button con este, da problemas -->
+      <input type="button" id="btnRefresh" onclick="cargarCombo()" disabled/> 
+      
+      <button id="btnCancel" onclick="cerrar()" disabled></button>
+    </div>
   </form>
 </div>
-</body>
-
-</html>
