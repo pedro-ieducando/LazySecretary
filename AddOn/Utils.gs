@@ -1,74 +1,25 @@
-// Comprueba si todos los campos obligatorios estan rellenados. En caso de que
-// haya alguno sin inicializar, devolvera false
 function checkData(alumno){  
   for (var i=0; i<4; i++){
     if (alumno[i] == ""){
       return false;
     }
   }
-  
   return true;
 }
 
-
-// Comprueba si la direccion de correo a la que se envian las credenciales está bien formado
 function checkEmail(alumno){
-  var email = alumno[4],
-      destino, // Nombre al que va dirigido el correo
-      dominio="", // Lo que va despues de la @
-      arroba, // Posicion de la @ en la direccion de correo
-      punto, // Posicion del ultimo punto del dominio
-      beforePunto, // Lo que hay entre la @ y el ultimo punto
-      afterPunto; // Lo que hay despues del ultimo punto
-  
-  email= email.trim(); // Quitamos los espacios al final y al principio por si acaso
-  
-  // Comprobamos que no haya espacios por medio
-  for (var i=0; i<email.length; i++){
-    var c= email[i];
-    if (c == " "){
-      return false;
-    }
-  }
-  
-  // Que haya una @ y solo una
-  if (email.indexOf("@") != -1 && (email.indexOf("@") == email.lastIndexOf("@"))){
-    arroba= email.indexOf("@");
-    dominio= email.substring(arroba+1, email.length); 
-    
-    // Que tenga una parte de dominio definida
-    if (dominio.length == 0){
-      return false;
-    }
-  }else{
-    return false;
-  }
-  
-  punto= dominio.lastIndexOf(".");
-  if (punto != -1){
-    beforePunto= dominio.substring(0, punto);
-    afterPunto= dominio.substring(punto+1, dominio.length);
-    
-    if (beforePunto.length == 0 || afterPunto.length == 0){
-      return false
-    }
-  }else{
-    return false;
-  }
-  
-  return true;
+  var email = alumno[4];
+  var regEx = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+  return (regEx.test(email));
 }
 
-// Devuelve la cuota diaria de mails que queda
 function checkDailyQuota(){
   return MailApp.getRemainingDailyQuota();
 }
 
-// Muestra un mensaje de confirmacion preguntando el mensaje que se le pasa por parametros
 function askYesNo(ui, mensaje){
-  var lang= Session.getActiveUserLocale(); // Idioma del usuario
+  var lang= Session.getActiveUserLocale();
   
-  // Valores de las cadenas de texto
   var valores= [
     "Por favor, confirma",
     mensaje
@@ -92,11 +43,9 @@ function askYesNo(ui, mensaje){
   }
 }
 
-// Muestra un mensaje informativo que se le pasa por parametros
 function confirmation(title, msg){
-  var lang= Session.getActiveUserLocale(); // Idioma del usuario
+  var lang= Session.getActiveUserLocale();
   
-  // Valores de las cadenas de texto
   var valores= [
     title,
     msg
@@ -108,7 +57,7 @@ function confirmation(title, msg){
     }
   }
   
-  var ui = SpreadsheetApp.getUi(); // Recogemos la interfaz
+  var ui = SpreadsheetApp.getUi();
   var result = ui.alert(
      valores[0],
      valores[1],
@@ -116,11 +65,9 @@ function confirmation(title, msg){
 }
 
 
-// Inserta un usuario en el dominio. Controla varias excepciones
 function addUser(email, nombre, apellidos, pass, orgUnit){
-  var lang= Session.getActiveUserLocale(); // Idioma del usuario
+  var lang= Session.getActiveUserLocale();
   
-  // Valores de las cadenas de texto
   var valores= [
     "El usuario ya existe",
     "Necesitas privilegios para añadir usuarios a tu dominio",
@@ -149,7 +96,6 @@ function addUser(email, nombre, apellidos, pass, orgUnit){
     user = AdminDirectory.Users.insert(user);
     return "exito";
   }catch(e){
-    // Tratamiento de errores
     if (e == "Exception: Entity already exists."){
       return valores[0];
     }
@@ -173,12 +119,9 @@ function addUser(email, nombre, apellidos, pass, orgUnit){
   }
 }
 
-
-// Envia un mensaje al destinatario que se le pasa por parametros
 function sendEmail(destinatario, usuario, pass, nombre){
-  var lang= Session.getActiveUserLocale(); // Idioma del usuario
+  var lang= Session.getActiveUserLocale();
   
-  // Valores de las cadenas de texto
   var valores= [
     "Credenciales de acceso",
     "Hola",
@@ -273,8 +216,6 @@ function sendEmail(destinatario, usuario, pass, nombre){
    });
 }
 
-
-// Recoge las unidades organizativas del dominio
 function cargarUO(){
   try{
     var mailUser= Session.getActiveUser().getEmail();
@@ -290,34 +231,27 @@ function cargarUO(){
   }
 }
 
-// Ordena las unidades organizativas por ruta
 function orderUO(a,b) {
   if (a.orgUnitPath.toLowerCase() < b.orgUnitPath.toLowerCase()){ return -1; }
   if (a.orgUnitPath.toLowerCase() > b.orgUnitPath.toLowerCase()){ return 1; }
   return 0;
 }
 
-// Cuando una unidad organizativa es seleccionada, se modifica la celda correspondiente para todos y cada uno de los usuarios
 function UOSelected(selected){
   var userProperties= PropertiesService.getUserProperties();
   userProperties.setProperty("unidadOrg", selected);
 }
 
-// devuelve el idioma del usuario
 function getLanguage(){
-  var lang= Session.getActiveUserLocale(); // Idioma del usuario
+  var lang= Session.getActiveUserLocale(); 
   return lang;
 }
 
-// traduce cadenas de texto para compatibilizar el complemento con otros idiomas
 function translate(texto, idioma){
   var traducido= LanguageApp.translate(texto, 'es', idioma);
   return traducido;
 }
 
-// Comprueba qué tipo de cuenta tiene el usuario. Si el id de cliente no esta definido quiere decir
-// que lo que posee una cuenta personal, no una cuenta de google apps. En ese caso devolveria nulo
-// para indicar al usuario que no podrá usar el complemento
 function checkAccount(){
   try{
     var mailUser= Session.getActiveUser().getEmail();
