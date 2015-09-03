@@ -1,14 +1,11 @@
 <!DOCTYPE html>
-
-  <!-- All script code -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+  
   <script>
-    // Valores de las cadenas de texto
     _0= "Paso 1: Inicializar";
     _1= "Eliminar todos los datos y preparar esta hoja.";
     btnInitialize= "Inicializar";
-    
     _2= "Paso 2: Aportar información";
     _3= "Rellena los campos con '*', los otros no se usarán pero pueden ser de utilidad. Vamos a tomar como ejemplo al usuario judith.smith@example.com:";
     _4= "Nombre de usuario: judith.smith";
@@ -21,25 +18,21 @@
     btnSelectUO= "Seleccionar U.O.";
     backButton="Atrás";
     nextButton="Continuar";
-    
     _10= "Paso 3: Configurar y crear";
     lblSendMail= "Enviar correo electrónico de bienvenida";
     lblTextCantidad= "Google limita a los usuarios con cuenta de Google Apps con el envío de un máximo de 1500 mensajes de correo electrónico por día. Para evitar el uso de todos ellos cuando estés añadiendo usuarios, puedes introducir en el cuadro de texto de abajo, un número de mensajes de correo electrónico que quieras mantener.";
     btnCreateUsers= "Crear";
     
-      
     window.onload = function() {
       $("#cargaPagina").fadeIn("fast");
       google.script.run.withSuccessHandler(init).getLanguage();
     };
     
     function init(lang){
-      
       if (lang != "es"){
         google.script.run.withSuccessHandler(function (texto){_0=texto;}).translate(_0, lang);
         google.script.run.withSuccessHandler(function (texto){_1=texto;}).translate(_1, lang);
         google.script.run.withSuccessHandler(function (texto){btnInitialize=texto;}).translate(btnInitialize, lang);
-        
         google.script.run.withSuccessHandler(function (texto){_2=texto;}).translate(_2, lang);
         google.script.run.withSuccessHandler(function (texto){_3=texto;}).translate(_3, lang);
         google.script.run.withSuccessHandler(function (texto){_4=texto;}).translate(_4, lang);
@@ -52,7 +45,6 @@
         google.script.run.withSuccessHandler(function (texto){btnSelectUO=texto;}).translate(btnSelectUO, lang);
         google.script.run.withSuccessHandler(function (texto){backButton=texto;}).translate(backButton, lang);
         google.script.run.withSuccessHandler(function (texto){nextButton=texto;}).translate(nextButton, lang);
-        
         google.script.run.withSuccessHandler(function (texto){_10=texto;}).translate(_10, lang);
         google.script.run.withSuccessHandler(function (texto){lblSendMail=texto;}).translate(lblSendMail, lang);
         google.script.run.withSuccessHandler(function (texto){lblTextCantidad=texto;}).translate(lblTextCantidad, lang);
@@ -68,13 +60,10 @@
     }
     
     function continueInit(){
-      // Step 1
       $("#0").html(_0);
       $("#1").html(_1);
       $("#btnInitialize").html(btnInitialize);
       $("#nextButton1").html(nextButton);
-      
-      // Step 2
       $("#2").html(_2);
       $("#3").html(_3);
       $("#4").html(_4);
@@ -85,28 +74,25 @@
       $("#9").html(_9);
       $("#btnSelectUO").html(btnSelectUO);
       $("#backButton2").html(backButton);
-      
-      // Step 3
       $("#10").html(_10);
       $("#lblSendMail").html(lblSendMail);
       $("#lblTextCantidad").html(lblTextCantidad);
       $("#btnCreateUsers").html(btnCreateUsers);
       $("#backButton3").html(backButton);
-      
-      // Init actions
       $("#cargaPagina").fadeOut("fast");
       $("#step1").fadeIn("fast");
     }
     
-    
-    // Navegacion entre pasos
-    function navigate(id, action){
-      if(id == "to2"){
+    function navigate(dest, action){
+      if(dest == "to2"){
         $("#step1").css("display", "none");
         $("#step2").fadeIn("fast");
         $("#step3").css("display", "none");
-        if (action == "load"){ cargarCombo(); }
-      }else if(id == "to3"){
+        if (action == "load"){
+          cargarCombo();
+        }
+      }
+      else if(dest == "to3"){
         $("#step1").css("display", "none");
         $("#step2").css("display", "none");
         $("#step3").fadeIn("fast");
@@ -117,8 +103,6 @@
       }
     }
     
-    
-    // Al inicializar la hoja
     function inicializarHoja(){
       $("#cargaPagina").fadeIn("fast");
       $('button').attr('disabled',true);
@@ -127,8 +111,6 @@
       google.script.run.withSuccessHandler(inicializarHojaHandler).initialize();
     }
     
-    
-    // Cuando la hoja ya se ha inicializado
     function inicializarHojaHandler(exito){
       if (exito == false){
         google.script.run.withSuccessHandler().confirmation(
@@ -150,24 +132,20 @@
       }
     }
     
-    
-    // Devuelve las unidades organizativas del dominio y las pasa a la funcion que las muestra
     function cargarCombo(){
       $("button").attr("disabled", true);
       $("input").attr("disabled", true);
       
       $("#msgError").html("");
-      $("#imagenCarga").fadeIn("fast"); // Imagen de carga
+      $("#imagenCarga").fadeIn("fast");
       google.script.run.withSuccessHandler(cargarUO).cargarUO();
     }
     
-    
-    // Rellena el combo con las unidades organizativas que recibe por parametros
     function cargarUO(orgUnits){
     
-      $("#imagenCarga").fadeOut("fast"); // Oculta la imagen de carga
+      $("#imagenCarga").fadeOut("fast");
     
-      if (orgUnits == null){ // Si no se han recibido unidades organizativas muestra un mensaje de error
+      if (orgUnits == null){
         $("#msgError").html(msgError);
         $("button:not(.to3)").attr("disabled", false);
         
@@ -178,10 +156,9 @@
         }
         
       }else{
-        vaciarCombo(); // Vacia el combo
+        vaciarCombo();
         var combo= document.getElementById("cmb");
         
-        // Añadimos tantas opciones como unidades organizativas haya
         for (var i=0; i<orgUnits.length; i++){
           var option = document.createElement("option");
           option.text = orgUnits[i].orgUnitPath;
@@ -199,8 +176,6 @@
       }
     }
     
-    
-    // Vacía el combo de opciones
     function vaciarCombo(){
       var combo= document.getElementById("cmb");
       while (combo.options.length > 0){
@@ -208,8 +183,6 @@
       }
     }
     
-    
-    // Confirma la seleccion de la unidad organizativa
     function enviar(){
       $("button").attr("disabled", true);
       $("input").attr("disabled", true);
@@ -229,11 +202,9 @@
           
           navigate("to3");
         }
-      ).UOSelected(valorAPasar); // Cambia el valor de todos los registros
+      ).UOSelected(valorAPasar);
     }
     
-    
-    // Permitir o no el envío de correo
     function mailListener(){
       if (!$("#sendMail").is(":checked")){
         $("#txtCantidad").attr("disabled", true);
@@ -243,28 +214,26 @@
       }
     }
     
-    // Empezamos a crear los usuarios
     function crearUsuarios(){
       $("#cargaPagina").fadeIn("fast");
       $("button").attr("disabled", true);
       $("button").attr("disabled", true);
       
-      var permitirEmail= $("#sendMail").is(":checked"); // Comprobamos si permitimos el envio de correos
+      var permitirEmail= $("#sendMail").is(":checked");
       
       if (permitirEmail){
-        var cuotaMinima= $("#txtCantidad").val(); // Comprobamos la cantidad minima de mensajes que el usuario quiere guardar
+        var cuotaMinima= $("#txtCantidad").val(); 
         if (cuotaMinima==""){
-          cuotaMinima= -1; // Si no establece una cantidad se usarán los que sean necesarios
+          cuotaMinima= -1; 
         }
         
         google.script.run.withSuccessHandler(usuariosCreados).createUsers(permitirEmail, cuotaMinima);
         
       }else{
-        google.script.run.withSuccessHandler(usuariosCreados).createUsers(permitirEmail, -1); // Si no permite el envio de emails se crearan los usuarios sin enviarles el correo de bienvenida
+        google.script.run.withSuccessHandler(usuariosCreados).createUsers(permitirEmail, -1);
       }
     }
     
-    // Devolvemos la cantidad de usuarios creados
     function usuariosCreados(cantidad){
       if (cantidad != null){
         google.script.run.withSuccessHandler().confirmation("Trabajo finalizado", "Ha terminado la ejecución del programa. Se crearon "+cantidad+" usuarios.");
@@ -279,11 +248,8 @@
         $("input:not(#txtCantidad)").attr("disabled", false);
       }
     }
-    
-    // End-script
   </script>
 
-<!-- All style code -->
   <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
   <style>
     #step1, #step2, #step3 { display: none; padding-left: 8px; padding-right: 8px; padding-bottom: 10px; text-align: justify;}
@@ -298,14 +264,10 @@
     
   </style>
 
-
-<!-- All html code -->
   <div>
     <img id="cargaPagina" src="http://i.imgur.com/jB43NZD.gif" />
   </div>
   
-  
-  <!-- Step 1 -->
   <div id="step1">
     <h3 id="0"></h3>
     <p></p>
@@ -316,8 +278,6 @@
     </div>
   </div>
   
-  
-  <!-- Step 2 -->
   <div id="step2">
     <h3 id="2"></h3>
     <p></p>
@@ -343,8 +303,6 @@
     </div>
   </div>
   
-  
-  <!-- Step 3 -->
   <div id="step3">
     <h3 id="10"></h3>
     <p></p>
