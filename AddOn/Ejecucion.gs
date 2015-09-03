@@ -1,8 +1,6 @@
-// Cuando se instala el documento se añaden las opciones del complemento al menu
 function onInstall(e) {
-  var lang= Session.getActiveUserLocale(); // Idioma del usuario
+  var lang= Session.getActiveUserLocale(); 
   
-  // Valores de las cadenas de texto
   var valores=[
     "Crear usuarios"
   ];
@@ -19,11 +17,9 @@ function onInstall(e) {
     .addToUi();
 }
 
-// Cuando se abre el documento se añaden las opciones del complemento al menu
 function onOpen(e) {
-  var lang= Session.getActiveUserLocale(); // Idioma del usuario
+  var lang= Session.getActiveUserLocale();
   
-  // Valores de las cadenas de texto
   var valores=[
     "Crear usuarios"
   ];
@@ -40,28 +36,22 @@ function onOpen(e) {
     .addToUi();
 }
 
-
-// Abre una sideBar para guiar al usuario en el proceso de creación de usuarios 
 function getStarted(){
-  // Comprueba que tiene una cuenta de Google Apps
   var typeAccount= checkAccount();
   if (typeAccount == null){
     confirmation("Hay un problema", "Para poder utilizar este Add-on necesitas tener una cuenta en Google Apps.");
     return;
   }
   
-  // Vamos a regoger el dominio del usuario actual, para utilizarlo después
   var email= Session.getActiveUser().getEmail();
   var dominio= email.substring(email.lastIndexOf("@"),email.length);
   
-  // Establecemos las propiedades del proyecto para este usuario
   var userProperties= PropertiesService.getUserProperties();
-  userProperties.setProperty("unidadOrg", "/"); // Unidad Organizativa por defecto
-  userProperties.setProperty("dominio", dominio) // Y tambien el dominio del usuario
+  userProperties.setProperty("unidadOrg", "/"); 
+  userProperties.setProperty("dominio", dominio) 
   
-  var lang= Session.getActiveUserLocale(); // Idioma del usuario
+  var lang= Session.getActiveUserLocale();
   
-  // Valores de las cadenas de texto
   var valores= [
     "Crear usuarios"
   ];
@@ -80,14 +70,9 @@ function getStarted(){
       .showSidebar(html);
 }
 
-
-// Inicializa la hoja insertando en la primera fila una serie de valores para
-// indicar al usuario como debe rellenar la hoja
 function initialize(){
+  var lang= Session.getActiveUserLocale();
   
-  var lang= Session.getActiveUserLocale(); // Idioma del usuario
-  
-  // Valores de las cadenas de texto
   var valores= [
     "Nombre de usuario",
     "Contraseña",
@@ -115,8 +100,8 @@ function initialize(){
     hoja.clear();
     hoja.setFrozenRows(1);
     
-    hoja.getRange('A1').setBackground("#CEE3F6").setValue("  "+valores[0]+" *  "); // Nombre de usuario en el dominio
-    hoja.getRange('B1').setBackground("#CEE3F6").setValue("  "+valores[1]+" *  "); // Contraseña que usará el usuario
+    hoja.getRange('A1').setBackground("#CEE3F6").setValue("  "+valores[0]+" *  "); 
+    hoja.getRange('B1').setBackground("#CEE3F6").setValue("  "+valores[1]+" *  "); 
     hoja.getRange('C1').setBackground("#CEE3F6").setValue("  "+valores[2]+" *  ");
     hoja.getRange('D1').setBackground("#CEE3F6").setValue("  "+valores[3]+" *  ");
     hoja.getRange('E1').setBackground("#CEE3F6").setValue("  "+valores[4]+"  ");
@@ -129,7 +114,7 @@ function initialize(){
     hoja.getRange('L1').setValue("  "+valores[11]+"  ");
     
     for (var i=1; i<=12; i++){
-      hoja.autoResizeColumn(i); // Con esto se auto dimensionan las celdas con el contenido que posean
+      hoja.autoResizeColumn(i);
     }
     
     return true;
@@ -139,13 +124,9 @@ function initialize(){
   }
 }
 
-
-// Crea usuarios en el dominio a partir de los datos de la hoja
 function createUsers(permitirEmail, cuotaMinima){
+  var lang= Session.getActiveUserLocale();
   
-  var lang= Session.getActiveUserLocale(); // Idioma del usuario
-  
-  // Valores de las cadenas de texto
   var valores= [
     "Los campos con '*' no pueden estar vacíos",
     "Usuario no creado: introduce un correo electrónico válido para enviar el correo de bienvenida",
@@ -163,48 +144,46 @@ function createUsers(permitirEmail, cuotaMinima){
     }
   }
   
-  var ui = SpreadsheetApp.getUi(); // Recogemos la interfaz
-  var sheet = SpreadsheetApp.getActiveSheet(); // Hoja actual
+  var ui = SpreadsheetApp.getUi(); 
+  var sheet = SpreadsheetApp.getActiveSheet();
   
-  var data = getData_(); // Recoge los datos de la hoja de calculo
+  var data = getData_();
   if (data == null){ return null; }
   
-  var contador= 1; // para saber la fila por donde vamos
-  var usuariosCreados= 0; // para llevar un control de los usuarios creados
+  var contador= 1;
+  var usuariosCreados= 0;
   
   for (var i = 0; i < data.length; i++){
     contador ++;
-    var celdaExito= sheet.getRange(contador,12); // Celda que indica el exito de la operacion actual
+    var celdaExito= sheet.getRange(contador,12);
     
-    // Comprobamos si la fila actual tiene alguno de los campos imprescindibles vacío
     if (!checkData(data[i])){
       celdaExito.setValue(valores[0]);
       celdaExito.setBackground("#F5BCA9");
       continue;
     };
     
-    var cuota= checkDailyQuota(); // Comprueba la cuota diaria restante
+    var cuota= checkDailyQuota();
     
-    if (permitirEmail && cuotaMinima != -1){ // Si se permite el envío de emails y se establece una cuota minima
-      if (!checkEmail(data[i])){ // Si el correo no es valido pasa al siguiente
+    if (permitirEmail && cuotaMinima != -1){ 
+      if (!checkEmail(data[i])){ 
         celdaExito.setValue(valores[1]); 
         celdaExito.setBackground("#F5BCA9");
         continue;
       }
       
-      if (cuota == 0){ // Si se agota la cuota diaria pasa al siguiente
+      if (cuota == 0){ 
         celdaExito.setValue(valores[2]);
         celdaExito.setBackground("#F5BCA9");
         continue;
       }
       
-      if (cuota <= cuotaMinima){ // Si se supera la cuota minima establecida, pasa al siguiente
+      if (cuota <= cuotaMinima){ 
         celdaExito.setValue(valores[3]);
         celdaExito.setBackground("#F5BCA9");
         continue;
       }
       
-      // Si no se cumple ninguna de las tres anteriores se podrá enviar el correo de bienvenida
     }
     
     var alumno = data[i],
@@ -221,7 +200,6 @@ function createUsers(permitirEmail, cuotaMinima){
         apellidoTutor2= alumno[10],
         creado= alumno[11];
     
-    // Recogemos las propiedades del usuario guardadas anteriormente
     var userProperties= PropertiesService.getUserProperties();
     var unidadOrg= userProperties.getProperty("unidadOrg");
     var dominio= userProperties.getProperty("dominio");
@@ -233,19 +211,19 @@ function createUsers(permitirEmail, cuotaMinima){
         if (checkEmail(data[i])){
           if (cuota != 0){
             sendEmail(correoContacto, usuario+dominio, pass, nombre);
-            celdaExito.setValue(valores[4]); // usuario creado y email enviado
+            celdaExito.setValue(valores[4]); 
             celdaExito.setBackground("#D8F6CE");
           }else{
-            celdaExito.setValue(valores[5]); // usuario creado pero la cuota diaria de envio de emails se ha agotado
+            celdaExito.setValue(valores[5]); 
             celdaExito.setBackground("#F5DA81");
           }
           
         }else{
-          celdaExito.setValue(valores[6]); // usuario creado pero el email no es valido
+          celdaExito.setValue(valores[6]); 
           celdaExito.setBackground("#F5DA81");
         }
       }else{
-        celdaExito.setValue(valores[7]); // usuario creado. configurado para no enviar email
+        celdaExito.setValue(valores[7]); 
         celdaExito.setBackground("#D8F6CE");
       }
       
@@ -259,12 +237,9 @@ function createUsers(permitirEmail, cuotaMinima){
   return usuariosCreados;
 }
 
-// Abre un cuadro de dialogo que permite seleccionar una unidad organizativa
 function chooseUO(){
+  var lang= Session.getActiveUserLocale();
   
-  var lang= Session.getActiveUserLocale(); // Idioma del usuario
-  
-  // Valores de las cadenas de texto
   var valores= [
     "Seleccionar Unidad Organizativa"
   ];
@@ -275,7 +250,6 @@ function chooseUO(){
     }
   }
   
-  
   var html = HtmlService.createHtmlOutputFromFile('chooseUO')
       .setSandboxMode(HtmlService.SandboxMode.IFRAME)
       .setWidth(600)
@@ -284,8 +258,6 @@ function chooseUO(){
   SpreadsheetApp.getUi().showModalDialog(html, valores[0]);
 }
 
-
-// Recoge los datos de la hoja de calculo, a partir de la segunda fila
 function getData_(){
   try{
     var sheet = SpreadsheetApp.getActiveSheet();
