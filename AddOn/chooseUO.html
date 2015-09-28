@@ -1,10 +1,12 @@
+<!-- Deprecated -->
+
+<!--
+
 <!DOCTYPE html>
 
-  <!-- All script code -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
   <script>
-    // Valores de las cadenas de texto
     _0= "Selecciona una Unidad Organizativa de la lista. Si no existe, puedes crearla en la consola de administración de tu dominio y pulsar el botón 'Refrescar' para recargar la lista. Para poder seleccionar una Unidad organizativa, la hoja de cálculo debe estar rellena con los datos de, al menos, un usuario.";
     msgError= "Ha ocurrido un error al cargar las unidades organizativas, intentalo de nuevo más tarde.";
     
@@ -49,17 +51,15 @@
       cargarCombo();
     }
 
-    // Devuelve las unidades organizativas del dominio y las pasa a la funcion que las muestra
     function cargarCombo(){
       $("button").attr("disabled", true);
       $("input").attr("disabled", true);
       
       $("#msgError").html("");
-      $("#imagenCarga").fadeIn("fast"); // Imagen de carga
+      $("#imagenCarga").fadeIn("fast");
       google.script.run.withSuccessHandler(cargarUO).cargarUO();
     }
   
-    // Vacía el combo de opciones
     function vaciarCombo(){
       var combo= document.getElementById("cmb");
       while (combo.options.length > 0){
@@ -67,18 +67,16 @@
       }
     }
     
-    // Rellena el combo con las unidades organizativas que recibe por parametros
     function cargarUO(orgUnits){
-      $("#imagenCarga").fadeOut("fast"); // Oculta la imagen de carga
+      $("#imagenCarga").fadeOut("fast");
     
-      if (orgUnits == null){ // Si no se han recibido unidades organizativas muestra un mensaje de error
+      if (orgUnits == null){
         $("#msgError").html(msgError);
       
       }else{
-        vaciarCombo(); // Vacia el combo
+        vaciarCombo();
         var combo= document.getElementById("cmb");
         
-        // Añadimos tantas opciones como unidades organizativas haya
         for (var i=0; i<orgUnits.length; i++){
           var option = document.createElement("option");
           option.text = orgUnits[i].orgUnitPath;
@@ -92,7 +90,6 @@
     }
   
   
-    // Confirma la seleccion de la unidad organizativa
     function enviar(){
       $("button").attr("disabled", true);
       $("input").attr("disabled", true);
@@ -100,27 +97,22 @@
       var combo= document.getElementById("cmb");
       var valorAPasar= combo.options[combo.selectedIndex].text;
       
-      google.script.run.withSuccessHandler(finish).UOSelected(valorAPasar); // Cambia el valor de todos los registros
+      google.script.run.withSuccessHandler(finish).UOSelected(valorAPasar);
     }
   
   
-    // Cierra el cuadro de dialogo de seleccion de unidad organizativa
     function finish(){
       $("button").attr("disabled", false);
       $("input").attr("disabled", false);
       $("#btnCancel").html(btnDone);
     }
   
-    // Cierra el cuadro de diálogo
     function cerrar(){
       google.script.host.close();
     }
-    
-    // End-script
   </script>
 
 
-<!-- All style code -->
 <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
 <style>
   p { text-align: justify; margin-bottom: 50px;}
@@ -133,7 +125,6 @@
 </style>
 
 
-<!-- All html code -->
 <div id="cargaPagina">
     <img src="http://i.imgur.com/jB43NZD.gif" />
 </div>
@@ -154,10 +145,11 @@
     <div id="actions">
       <button id="btnSubmit" class="action" onclick="enviar()" disabled ></button>
       
-      <!-- Si utilizamos la etiqueta button con este, da problemas -->
       <input type="button" id="btnRefresh" onclick="cargarCombo()" disabled/> 
       
       <button id="btnCancel" onclick="cerrar()" disabled></button>
     </div>
   </form>
 </div>
+
+-->
