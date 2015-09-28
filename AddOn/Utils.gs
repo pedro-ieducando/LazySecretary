@@ -66,7 +66,7 @@ function confirmation(title, msg){
 
 
 function addUser(email, nombre, apellidos, pass, orgUnit){
-  var lang= Session.getActiveUserLocale();
+  var lang= Session.getActiveUserLocale(); 
   
   var valores= [
     "El usuario ya existe",
@@ -74,7 +74,7 @@ function addUser(email, nombre, apellidos, pass, orgUnit){
     "No se encuentra la unidad organizativa",
     "No es posible encontrar el dominio especificado. Tienes que introducir \n"+"el dominio principal de tu cuenta de Google Apps, o un alias de dominio  \n"+"con estado 'activo'. Por ejemplo, para crear 'judith.smith@example.com', \n"+"el dominio es 'example.com'.",
     "El correo electrónico del nuevo usuario no es válido",
-    "La contraseña no es válida"
+    "La contraseña tiene menos de 8 caracteres, es demasiado corta."
   ];
   
   if (lang != "es"){
@@ -118,6 +118,7 @@ function addUser(email, nombre, apellidos, pass, orgUnit){
     return "Error: "+e;
   }
 }
+
 
 function sendEmail(destinatario, usuario, pass, nombre){
   var lang= Session.getActiveUserLocale();
@@ -216,12 +217,10 @@ function sendEmail(destinatario, usuario, pass, nombre){
    });
 }
 
+
 function cargarUO(){
   try{
-    var mailUser= Session.getActiveUser().getEmail();
-    var customerId= AdminDirectory.Users.get(mailUser).customerId;
-    
-    var orgUnits= AdminDirectory.Orgunits.list(customerId, {type:"all"}).organizationUnits;
+    var orgUnits= AdminDirectory.Orgunits.list("my_customer", {type:"all"}).organizationUnits;
     
     orgUnits.sort(orderUO);
     
@@ -243,7 +242,7 @@ function UOSelected(selected){
 }
 
 function getLanguage(){
-  var lang= Session.getActiveUserLocale(); 
+  var lang= Session.getActiveUserLocale();
   return lang;
 }
 
