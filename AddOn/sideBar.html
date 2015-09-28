@@ -1,69 +1,87 @@
 <!DOCTYPE html>
+
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
   
   <script>
+    var myInterval;
+    var cT = 0;
+  
     _0= "Paso 1: Inicializar";
     _1= "Eliminar todos los datos y preparar esta hoja.";
     btnInitialize= "Inicializar";
+    
     _2= "Paso 2: Aportar información";
     _3= "Rellena los campos con '*', los otros no se usarán pero pueden ser de utilidad. Vamos a tomar como ejemplo al usuario judith.smith@example.com:";
     _4= "Nombre de usuario: judith.smith";
     _5= "Contraseña: la que quieras (procura que sea segura)";
     _6= "Nombre: Judith";
     _7= "Apellidos: Smith";
-    _8= "Correo de contacto: dirección a la que se enviará la información de la nueva cuenta.";
+    _8= "Correo de contacto: dirección a la que se enviará la información de la nueva cuenta (sólo si quieres enviar correo electrónico de bienvenida).";
     _9= "Cuando hayas terminado, selecciona la Unidad Organizativa donde vas a introducir los nuevos usuarios:";
     msgError= "Error al cargar las unidades organizativas, intentalo de nuevo más tarde.";
     btnSelectUO= "Seleccionar U.O.";
     backButton="Atrás";
     nextButton="Continuar";
-    _10= "Paso 3: Configurar y crear";
-    lblSendMail= "Enviar correo electrónico de bienvenida";
-    lblTextCantidad= "Google limita a los usuarios con cuenta de Google Apps con el envío de un máximo de 1500 mensajes de correo electrónico por día. Para evitar el uso de todos ellos cuando estés añadiendo usuarios, puedes introducir en el cuadro de texto de abajo, un número de mensajes de correo electrónico que quieras mantener.";
+    
+    lblSendMail= "Enviar correo electrónico de bienvenida. Aún puedes enviar hoy: ";
     btnCreateUsers= "Crear";
+    
     
     window.onload = function() {
       $("#cargaPagina").fadeIn("fast");
-      google.script.run.withSuccessHandler(init).getLanguage();
+      google.script.run.withSuccessHandler(function(dailyCuota){
+      
+        lblSendMail += "<b>"+dailyCuota+"</b>";
+        google.script.run.withSuccessHandler(init).getLanguage();
+        
+      }).checkDailyQuota();
     };
     
+    
     function init(lang){
+    
       if (lang != "es"){
-        google.script.run.withSuccessHandler(function (texto){_0=texto;}).translate(_0, lang);
-        google.script.run.withSuccessHandler(function (texto){_1=texto;}).translate(_1, lang);
-        google.script.run.withSuccessHandler(function (texto){btnInitialize=texto;}).translate(btnInitialize, lang);
-        google.script.run.withSuccessHandler(function (texto){_2=texto;}).translate(_2, lang);
-        google.script.run.withSuccessHandler(function (texto){_3=texto;}).translate(_3, lang);
-        google.script.run.withSuccessHandler(function (texto){_4=texto;}).translate(_4, lang);
-        google.script.run.withSuccessHandler(function (texto){_5=texto;}).translate(_5, lang);
-        google.script.run.withSuccessHandler(function (texto){_6=texto;}).translate(_6, lang);
-        google.script.run.withSuccessHandler(function (texto){_7=texto;}).translate(_7, lang);
-        google.script.run.withSuccessHandler(function (texto){_8=texto;}).translate(_8, lang);
-        google.script.run.withSuccessHandler(function (texto){_9=texto;}).translate(_9, lang);
-        google.script.run.withSuccessHandler(function (texto){msgError=texto;}).translate(msgError, lang);
-        google.script.run.withSuccessHandler(function (texto){btnSelectUO=texto;}).translate(btnSelectUO, lang);
-        google.script.run.withSuccessHandler(function (texto){backButton=texto;}).translate(backButton, lang);
-        google.script.run.withSuccessHandler(function (texto){nextButton=texto;}).translate(nextButton, lang);
-        google.script.run.withSuccessHandler(function (texto){_10=texto;}).translate(_10, lang);
-        google.script.run.withSuccessHandler(function (texto){lblSendMail=texto;}).translate(lblSendMail, lang);
-        google.script.run.withSuccessHandler(function (texto){lblTextCantidad=texto;}).translate(lblTextCantidad, lang);
-        google.script.run.withSuccessHandler(
-          function (texto){
-            btnCreateUsers=texto;
-            continueInit();
-          }
-        ).translate(btnCreateUsers, lang);
+        myInterval= setInterval(function(){checkTranslates()}, 1000);
+      
+        google.script.run.withSuccessHandler(function (texto){_0=texto; cT++;}).translate(_0, lang);
+        google.script.run.withSuccessHandler(function (texto){_1=texto; cT++;}).translate(_1, lang);
+        google.script.run.withSuccessHandler(function (texto){btnInitialize=texto; cT++;}).translate(btnInitialize, lang);
+        
+        google.script.run.withSuccessHandler(function (texto){_2=texto; cT++;}).translate(_2, lang);
+        google.script.run.withSuccessHandler(function (texto){_3=texto; cT++;}).translate(_3, lang);
+        google.script.run.withSuccessHandler(function (texto){_4=texto; cT++;}).translate(_4, lang);
+        google.script.run.withSuccessHandler(function (texto){_5=texto; cT++;}).translate(_5, lang);
+        google.script.run.withSuccessHandler(function (texto){_6=texto; cT++;}).translate(_6, lang);
+        google.script.run.withSuccessHandler(function (texto){_7=texto; cT++;}).translate(_7, lang);
+        google.script.run.withSuccessHandler(function (texto){_8=texto; cT++;}).translate(_8, lang);
+        google.script.run.withSuccessHandler(function (texto){_9=texto; cT++;}).translate(_9, lang);
+        google.script.run.withSuccessHandler(function (texto){msgError=texto; cT++;}).translate(msgError, lang);
+        google.script.run.withSuccessHandler(function (texto){btnSelectUO=texto; cT++;}).translate(btnSelectUO, lang);
+        google.script.run.withSuccessHandler(function (texto){backButton=texto; cT++;}).translate(backButton, lang);
+        google.script.run.withSuccessHandler(function (texto){nextButton=texto; cT++;}).translate(nextButton, lang);
+        
+        google.script.run.withSuccessHandler(function (texto){lblSendMail=texto; cT++;}).translate(lblSendMail, lang);
+        google.script.run.withSuccessHandler(function (texto){btnCreateUsers=texto; cT++;}).translate(btnCreateUsers, lang);
       }else{
         continueInit();
       }
     }
     
+    
+    function checkTranslates(){
+      if(cT == 17){
+        clearInterval(myInterval);
+        continueInit();
+      }
+    }
+    
+    
     function continueInit(){
       $("#0").html(_0);
       $("#1").html(_1);
       $("#btnInitialize").html(btnInitialize);
-      $("#nextButton1").html(nextButton);
+      
       $("#2").html(_2);
       $("#3").html(_3);
       $("#4").html(_4);
@@ -74,42 +92,35 @@
       $("#9").html(_9);
       $("#btnSelectUO").html(btnSelectUO);
       $("#backButton2").html(backButton);
-      $("#10").html(_10);
       $("#lblSendMail").html(lblSendMail);
-      $("#lblTextCantidad").html(lblTextCantidad);
       $("#btnCreateUsers").html(btnCreateUsers);
-      $("#backButton3").html(backButton);
+      
       $("#cargaPagina").fadeOut("fast");
       $("#step1").fadeIn("fast");
     }
+    
     
     function navigate(dest, action){
       if(dest == "to2"){
         $("#step1").css("display", "none");
         $("#step2").fadeIn("fast");
-        $("#step3").css("display", "none");
         if (action == "load"){
           cargarCombo();
         }
-      }
-      else if(dest == "to3"){
-        $("#step1").css("display", "none");
-        $("#step2").css("display", "none");
-        $("#step3").fadeIn("fast");
       }else{
         $("#step1").fadeIn("fast");
         $("#step2").css("display", "none");
-        $("#step3").css("display", "none");
       }
     }
+    
     
     function inicializarHoja(){
       $("#cargaPagina").fadeIn("fast");
       $('button').attr('disabled',true);
-      $('input').attr('disabled',true);
       
       google.script.run.withSuccessHandler(inicializarHojaHandler).initialize();
     }
+    
     
     function inicializarHojaHandler(exito){
       if (exito == false){
@@ -123,23 +134,20 @@
       }
       
       $("#cargaPagina").fadeOut("fast");
-      $("button:not(.to3)").attr("disabled", false);
-      
-      if ($("#sendMail").is(":checked")){
-        $('input').attr('disabled',false);
-      }else{
-        $("input:not(#txtCantidad)").attr("disabled", false);
-      }
+      $("#btnInitialize").attr("disabled", false);
+      $("#btnSelectUO").attr("disabled", true);
+      $("#btnCreateUsers").attr("disabled", true);
     }
+    
     
     function cargarCombo(){
       $("button").attr("disabled", true);
-      $("input").attr("disabled", true);
       
       $("#msgError").html("");
       $("#imagenCarga").fadeIn("fast");
       google.script.run.withSuccessHandler(cargarUO).cargarUO();
     }
+    
     
     function cargarUO(orgUnits){
     
@@ -147,13 +155,9 @@
     
       if (orgUnits == null){
         $("#msgError").html(msgError);
-        $("button:not(.to3)").attr("disabled", false);
-        
-        if ($("#sendMail").is(":checked")){
-          $('input').attr('disabled',false);
-        }else{
-          $("input:not(#txtCantidad)").attr("disabled", false);
-        }
+        $("button").attr("disabled", false);
+        $("#btnSelectUO").attr("disabled", true);
+        $("#btnCreateUsers").attr("disabled", true);
         
       }else{
         vaciarCombo();
@@ -167,14 +171,10 @@
         }
         
         $("button").attr("disabled", false);
-        
-        if ($("#sendMail").is(":checked")){
-          $('input').attr('disabled',false);
-        }else{
-          $("input:not(#txtCantidad)").attr("disabled", false);
-        }
+        $("#btnCreateUsers").attr("disabled", true);
       }
     }
+    
     
     function vaciarCombo(){
       var combo= document.getElementById("cmb");
@@ -183,9 +183,9 @@
       }
     }
     
-    function enviar(){
+    
+    function chooseOU(){
       $("button").attr("disabled", true);
-      $("input").attr("disabled", true);
       
       var combo= document.getElementById("cmb");
       var valorAPasar= combo.options[combo.selectedIndex].text;
@@ -193,76 +193,37 @@
       google.script.run.withSuccessHandler(
         function(){
           $("button").attr("disabled", false);
-          
-          if ($("#sendMail").is(":checked")){
-            $('input').attr('disabled',false);
-          }else{
-            $("input:not(#txtCantidad)").attr("disabled", false);
-          }
-          
-          navigate("to3");
         }
       ).UOSelected(valorAPasar);
     }
     
-    function mailListener(){
-      if (!$("#sendMail").is(":checked")){
-        $("#txtCantidad").attr("disabled", true);
-        $("#txtCantidad").val("");
-      }else{
-        $("#txtCantidad").attr("disabled", false);
-      }
-    }
-    
     function crearUsuarios(){
-      $("#cargaPagina").fadeIn("fast");
       $("button").attr("disabled", true);
-      $("button").attr("disabled", true);
+      $("input").attr("disabled", true);
       
       var permitirEmail= $("#sendMail").is(":checked");
       
-      if (permitirEmail){
-        var cuotaMinima= $("#txtCantidad").val(); 
-        if (cuotaMinima==""){
-          cuotaMinima= -1; 
-        }
-        
-        google.script.run.withSuccessHandler(usuariosCreados).createUsers(permitirEmail, cuotaMinima);
-        
-      }else{
-        google.script.run.withSuccessHandler(usuariosCreados).createUsers(permitirEmail, -1);
-      }
-    }
-    
-    function usuariosCreados(cantidad){
-      if (cantidad != null){
-        google.script.run.withSuccessHandler().confirmation("Trabajo finalizado", "Ha terminado la ejecución del programa. Se crearon "+cantidad+" usuarios.");
-      }
-      
-      $("#cargaPagina").fadeOut("fast");
-      $('button').attr('disabled',false);
-      
-      if ($("#sendMail").is(":checked")){
-        $('input').attr('disabled',false);
-      }else{
-        $("input:not(#txtCantidad)").attr("disabled", false);
-      }
+      google.script.run.withSuccessHandler( function(){
+        $('button').attr('disabled',false);
+        $("input").attr("disabled", false);
+      }).createUsers(permitirEmail);
     }
   </script>
 
   <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
   <style>
-    #step1, #step2, #step3 { display: none; padding-left: 8px; padding-right: 8px; padding-bottom: 10px; text-align: justify;}
+    #step1, #step2 { display: none; padding-left: 8px; padding-right: 8px; padding-bottom: 10px; text-align: justify;}
     #cargaPagina { top: 50%; left:45%; position: absolute; display: none;}
     #formEmail, #formCuota { padding-left: 10px; padding-right: 10px; padding-top: 15px; }
     #lblRadioMailYes {margin-right: 20px;}
-    #actions1, #actions2, #actions3 { bottom: 0px; margin-bottom: 15px; position: absolute; }
+    #actions1, #actions2 { bottom: 0px; margin-bottom: 15px; position: absolute; }
     #cmb { max-width: 250px }
     #imagenCarga {position:absolute; float:right; margin-top:6px; margin-left:9px; width: 15px; display:none; }
     h3 {margin-bottom: -12px; margin-top: 20px;}
     button { margin-right: -10px; }
     
   </style>
+
 
   <div>
     <img id="cargaPagina" src="http://i.imgur.com/jB43NZD.gif" />
@@ -274,7 +235,6 @@
     <p id="1"></p>
     <div id="actions1">
       <button class="action" id="btnInitialize" onclick="inicializarHoja()"></button>
-      <button id="nextButton1" onclick="navigate('to2','load')"></button>
     </div>
   </div>
   
@@ -289,7 +249,7 @@
       <li id="7"></li>
       <li id="8"></li>
     </ul>
-    <p id="9" style="margin-top:25px"></p>
+    <p id="9" style="margin-top:15px"></p>
     <p>
       <select id="cmb"> </select>
       <img id="imagenCarga" src="http://i.imgur.com/jB43NZD.gif" />
@@ -297,29 +257,16 @@
     <p>
       <span id="msgError" class="error"></span>
     </p>
-    <div id="actions2">
-      <button class="action" id="btnSelectUO" onclick="enviar()"></button>
-      <button id="backButton2" onclick="navigate('to1','none')"></button>
-    </div>
-  </div>
-  
-  <div id="step3">
-    <h3 id="10"></h3>
-    <p></p>
     <div id="formEmail">
       <span>
-        <input type="checkbox" id="sendMail" onclick="mailListener()" />
+        <input type="checkbox" id="sendMail" />
         <label for="sendMail" id="lblSendMail"></label>
       </span>
+      <span id="emailsLeft"></span>
     </div>
-  
-    <div class="inline form-group" id="formCuota">
-      <label for="txtCantidad" id="lblTextCantidad"></label>
-      <input type="number" min="0" id="txtCantidad" style="width: 65px;" disabled />
-    </div>
-  
-    <div id="actions3">
+    <div id="actions2">
       <button class="create" id="btnCreateUsers" onclick="crearUsuarios()"></button>
-      <button id="backButton3" onclick="navigate('to2','none')" ></button>
+      <button class="action" id="btnSelectUO" onclick="chooseOU()"></button>
+      <button id="backButton2" onclick="navigate('to1','none')"></button>
     </div>
   </div>
