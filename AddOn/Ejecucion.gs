@@ -1,5 +1,5 @@
 function onInstall(e) {
-  var lang= Session.getActiveUserLocale(); 
+  var lang= Session.getActiveUserLocale();
   
   var valores=[
     "Crear usuarios"
@@ -36,6 +36,7 @@ function onOpen(e) {
     .addToUi();
 }
 
+
 function getStarted(){
   var typeAccount= checkAccount();
   if (typeAccount == null){
@@ -47,8 +48,8 @@ function getStarted(){
   var dominio= email.substring(email.lastIndexOf("@"),email.length);
   
   var userProperties= PropertiesService.getUserProperties();
-  userProperties.setProperty("unidadOrg", "/"); 
-  userProperties.setProperty("dominio", dominio) 
+  userProperties.setProperty("unidadOrg", "/");
+  userProperties.setProperty("dominio", dominio);
   
   var lang= Session.getActiveUserLocale();
   
@@ -69,6 +70,7 @@ function getStarted(){
   SpreadsheetApp.getUi()
       .showSidebar(html);
 }
+
 
 function initialize(){
   var lang= Session.getActiveUserLocale();
@@ -100,11 +102,11 @@ function initialize(){
     hoja.clear();
     hoja.setFrozenRows(1);
     
-    hoja.getRange('A1').setBackground("#CEE3F6").setValue("  "+valores[0]+" *  "); 
-    hoja.getRange('B1').setBackground("#CEE3F6").setValue("  "+valores[1]+" *  "); 
+    hoja.getRange('A1').setBackground("#CEE3F6").setValue("  "+valores[0]+" *  ");
+    hoja.getRange('B1').setBackground("#CEE3F6").setValue("  "+valores[1]+" *  ");
     hoja.getRange('C1').setBackground("#CEE3F6").setValue("  "+valores[2]+" *  ");
     hoja.getRange('D1').setBackground("#CEE3F6").setValue("  "+valores[3]+" *  ");
-    hoja.getRange('E1').setBackground("#CEE3F6").setValue("  "+valores[4]+"  ");
+    hoja.getRange('E1').setBackground("#D0F5A9").setValue("  "+valores[4]+" *  ");
     hoja.getRange('F1').setValue("  "+valores[5]+"  ");
     hoja.getRange('G1').setValue("  "+valores[6]+"  ");
     hoja.getRange('H1').setValue("  "+valores[7]+"  ");
@@ -124,17 +126,16 @@ function initialize(){
   }
 }
 
-function createUsers(permitirEmail, cuotaMinima){
+
+function createUsers(permitirEmail){
+  
   var lang= Session.getActiveUserLocale();
   
   var valores= [
-    "Los campos con '*' no pueden estar vacíos",
+    "Los campos obligatorios no pueden estar vacíos",
     "Usuario no creado: introduce un correo electrónico válido para enviar el correo de bienvenida",
     "Usuario no creado: has agotado todos los correos electrónicos que puedes enviar en un día",
-    "Usuario no creado: has decidido mantener algunos mensajes de correo y ya has alcanzado el mínimo",
     "El usuario se ha creado, correo electrónico enviado",
-    "El usuario se ha creado, pero has agotado todos los correos electrónicos que podías enviar en el día",
-    "El usuario se ha creado, pero el correo electrónico del campo 'Correo de contacto' no es válido",
     "El usuario se ha creado. Configurado para no enviar correo electrónico de bienvenida"
   ];
   
@@ -144,11 +145,25 @@ function createUsers(permitirEmail, cuotaMinima){
     }
   }
   
-  var ui = SpreadsheetApp.getUi(); 
+  var ui = SpreadsheetApp.getUi();
   var sheet = SpreadsheetApp.getActiveSheet();
   
   var data = getData_();
   if (data == null){ return null; }
+  
+  
+  var decision= true;
+  
+  if (permitirEmail && checkDailyQuota() < data.length){
+    decision= askYesNo(ui, "No tienes suficientes correos electrónicos para enviar mensajes de bienvenida a todos los usuarios. Vas a utilizar todos tus correos electrónicos y algunos usuarios no serán creados. ¿Quieres continuar?");
+  }else if(permitirEmail && checkDailyQuota() == data.length){
+    decision= askYesNo(ui, "Vas a utilizar todos tus correos electrónicos. ¿Quieres continuar?");
+  }
+  
+  if (decision == false){
+    confirmation("Trabajo finalizado", "Ha terminado la ejecución del programa. Se crearon 0 usuarios.");
+    return;
+  }
   
   var contador= 1;
   var usuariosCreados= 0;
@@ -165,27 +180,20 @@ function createUsers(permitirEmail, cuotaMinima){
     
     var cuota= checkDailyQuota();
     
-    if (permitirEmail && cuotaMinima != -1){ 
-      if (!checkEmail(data[i])){ 
+    if (permitirEmail){ 
+      if (!checkEmail(data[i])){
         celdaExito.setValue(valores[1]); 
         celdaExito.setBackground("#F5BCA9");
         continue;
       }
       
-      if (cuota == 0){ 
+      if (cuota == 0){
         celdaExito.setValue(valores[2]);
         celdaExito.setBackground("#F5BCA9");
         continue;
       }
-      
-      if (cuota <= cuotaMinima){ 
-        celdaExito.setValue(valores[3]);
-        celdaExito.setBackground("#F5BCA9");
-        continue;
-      }
-      
     }
-    
+  
     var alumno = data[i],
         usuario = alumno[0],
         pass = alumno[1],
@@ -205,25 +213,14 @@ function createUsers(permitirEmail, cuotaMinima){
     var dominio= userProperties.getProperty("dominio");
     
     var exito= addUser(usuario+dominio, nombre, apellidos, pass, unidadOrg);
-
+  
     if (exito == "exito"){
       if (permitirEmail){
-        if (checkEmail(data[i])){
-          if (cuota != 0){
-            sendEmail(correoContacto, usuario+dominio, pass, nombre);
-            celdaExito.setValue(valores[4]); 
-            celdaExito.setBackground("#D8F6CE");
-          }else{
-            celdaExito.setValue(valores[5]); 
-            celdaExito.setBackground("#F5DA81");
-          }
-          
-        }else{
-          celdaExito.setValue(valores[6]); 
-          celdaExito.setBackground("#F5DA81");
-        }
+        sendEmail(correoContacto, usuario+dominio, pass, nombre);
+        celdaExito.setValue(valores[3]);
+        celdaExito.setBackground("#D8F6CE");
       }else{
-        celdaExito.setValue(valores[7]); 
+        celdaExito.setValue(valores[4]);
         celdaExito.setBackground("#D8F6CE");
       }
       
@@ -234,29 +231,14 @@ function createUsers(permitirEmail, cuotaMinima){
     }
   }
   
-  return usuariosCreados;
-}
-
-function chooseUO(){
-  var lang= Session.getActiveUserLocale();
-  
-  var valores= [
-    "Seleccionar Unidad Organizativa"
-  ];
-  
-  if (lang != "es"){
-    for (var i=0; i<valores.length; i++){
-      valores[i]= translate(valores[i], lang);
-    }
+  for (var i=1; i<=12; i++){
+    sheet.autoResizeColumn(i);
   }
   
-  var html = HtmlService.createHtmlOutputFromFile('chooseUO')
-      .setSandboxMode(HtmlService.SandboxMode.IFRAME)
-      .setWidth(600)
-      .setHeight(200)
-  
-  SpreadsheetApp.getUi().showModalDialog(html, valores[0]);
+  confirmation("Trabajo finalizado", "Ha terminado la ejecución del programa. Se crearon "+usuariosCreados+" usuarios.");
+  return;
 }
+
 
 function getData_(){
   try{
