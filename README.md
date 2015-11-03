@@ -24,4 +24,4 @@ It's developed with <a href="https://developers.google.com/apps-script/" target=
 You can access to the <a href="https://github.com/pedro-ieducando/LazySecretary/wiki">wiki</a> if you want to know how to install for test it and continue with development
 
 
-Any reference to this add must necessarily include reference to authors: <a href="http://ieducando.com" target="_blank">ieducando</a> y <a href="https://plus.google.com/u/0/b/108412825091483733423/communities/106561953391669938292" target="_blank">GDG Madrid</a>
+Any reference to this add-on must necessarily include reference to authors: <a href="http://ieducando.com" target="_blank">ieducando</a> y <a href="https://plus.google.com/u/0/b/108412825091483733423/communities/106561953391669938292" target="_blank">GDG Madrid</a>
